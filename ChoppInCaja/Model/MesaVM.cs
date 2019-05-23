@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChoppInCaja.Model
 {
-    public class Mesas
+    public class MesaVM
     {
         public int IdMesa { get; set; }
         public int Nombre { get; set; }

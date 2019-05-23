@@ -9,11 +9,11 @@
         <EntityTypeShape EntityType="ChoppinModel.Pago" Width="1.5" PointX="4" PointY="4" IsExpanded="true" />
         <EntityTypeShape EntityType="ChoppinModel.Producto" Width="1.5" PointX="0.5" PointY="2.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ChoppinModel.Venta" Width="1.5" PointX="3.25" PointY="0.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="ChoppinModel.VentasDetalle" Width="1.5" PointX="6" PointY="0.875" IsExpanded="true" />
         <AssociationConnector Association="ChoppinModel.FK_Ventas_Mesas" ManuallyRouted="false" />
-        <AssociationConnector Association="ChoppinModel.FK_VentasDetalle_Productos" ManuallyRouted="false" />
-        <AssociationConnector Association="ChoppinModel.FK_VentasDetalle_Ventas" ManuallyRouted="false" />
-      </Diagram>
+        <EntityTypeShape EntityType="ChoppinModel.VentasDetalle" Width="1.5" PointX="5.5" PointY="0.75" />
+        <AssociationConnector Association="ChoppinModel.FK_VentasDetalle_Productos" />
+        <AssociationConnector Association="ChoppinModel.FK_VentasDetalle_Ventas" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

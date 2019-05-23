@@ -40,8 +40,9 @@
         </EntityType>
         <EntityType Name="VentasDetalle">
           <Key>
-            <PropertyRef Name="IdVenta" />
+            <PropertyRef Name="IdVentaDetalle" />
           </Key>
+          <Property Name="IdVentaDetalle" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdVenta" Type="int" Nullable="false" />
           <Property Name="IdProducto" Type="int" Nullable="false" />
           <Property Name="Cantidad" Type="int" Nullable="false" />
@@ -49,6 +50,7 @@
           <Property Name="Diferencia" Type="numeric" Precision="18" Scale="4" Nullable="false" />
           <Property Name="DiferenciaIdAplica" Type="int" />
           <Property Name="DiferenciaMotivo" Type="nvarchar" MaxLength="200" />
+          <Property Name="Fecha" Type="datetime" Nullable="false" />
         </EntityType>
         <Association Name="FK_Ventas_Mesas">
           <End Role="Mesas" Type="Self.Mesas" Multiplicity="1" />
@@ -76,7 +78,7 @@
         </Association>
         <Association Name="FK_VentasDetalle_Ventas">
           <End Role="Ventas" Type="Self.Ventas" Multiplicity="1" />
-          <End Role="VentasDetalle" Type="Self.VentasDetalle" Multiplicity="0..1" />
+          <End Role="VentasDetalle" Type="Self.VentasDetalle" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Ventas">
               <PropertyRef Name="IdVenta" />
@@ -133,7 +135,7 @@
           <Property Name="IdProducto" Type="Int32" Nullable="false" />
           <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Precio" Type="Decimal" Precision="18" Scale="4" Nullable="false" />
-          <NavigationProperty Name="VentasDetalles" Relationship="Self.FK_VentasDetalle_Productos" FromRole="Productos" ToRole="VentasDetalle" />
+          <NavigationProperty Name="VentasDetalles" Relationship="ChoppinModel.FK_VentasDetalle_Productos" FromRole="Producto" ToRole="VentasDetalle" />
         </EntityType>
         <EntityType Name="Venta">
           <Key>
@@ -144,21 +146,7 @@
           <Property Name="Apertura" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Cierre" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Mesa" Relationship="Self.FK_Ventas_Mesas" FromRole="Ventas" ToRole="Mesas" />
-          <NavigationProperty Name="VentasDetalle" Relationship="Self.FK_VentasDetalle_Ventas" FromRole="Ventas" ToRole="VentasDetalle" />
-        </EntityType>
-        <EntityType Name="VentasDetalle">
-          <Key>
-            <PropertyRef Name="IdVenta" />
-          </Key>
-          <Property Name="IdVenta" Type="Int32" Nullable="false" />
-          <Property Name="IdProducto" Type="Int32" Nullable="false" />
-          <Property Name="Cantidad" Type="Int32" Nullable="false" />
-          <Property Name="Precio" Type="Decimal" Precision="18" Scale="4" Nullable="false" />
-          <Property Name="Diferencia" Type="Decimal" Precision="18" Scale="4" Nullable="false" />
-          <Property Name="DiferenciaIdAplica" Type="Int32" />
-          <Property Name="DiferenciaMotivo" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Producto" Relationship="Self.FK_VentasDetalle_Productos" FromRole="VentasDetalle" ToRole="Productos" />
-          <NavigationProperty Name="Venta" Relationship="Self.FK_VentasDetalle_Ventas" FromRole="VentasDetalle" ToRole="Ventas" />
+          <NavigationProperty Name="VentasDetalles" Relationship="ChoppinModel.FK_VentasDetalle_Ventas" FromRole="Venta" ToRole="VentasDetalle" />
         </EntityType>
         <Association Name="FK_Ventas_Mesas">
           <End Role="Mesas" Type="Self.Mesa" Multiplicity="1" />
@@ -172,11 +160,46 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityContainer Name="ChoppinEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Mesas" EntityType="Self.Mesa" />
+          <EntitySet Name="Pagos" EntityType="Self.Pago" />
+          <EntitySet Name="Productos" EntityType="Self.Producto" />
+          <EntitySet Name="Ventas" EntityType="Self.Venta" />
+          <AssociationSet Name="FK_Ventas_Mesas" Association="Self.FK_Ventas_Mesas">
+            <End Role="Mesas" EntitySet="Mesas" />
+            <End Role="Ventas" EntitySet="Ventas" />
+          </AssociationSet>
+          <EntitySet Name="VentasDetalles" EntityType="ChoppinModel.VentasDetalle" />
+          <AssociationSet Name="FK_VentasDetalle_Productos" Association="ChoppinModel.FK_VentasDetalle_Productos">
+            <End Role="Producto" EntitySet="Productos" />
+            <End Role="VentasDetalle" EntitySet="VentasDetalles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VentasDetalle_Ventas" Association="ChoppinModel.FK_VentasDetalle_Ventas">
+            <End Role="Venta" EntitySet="Ventas" />
+            <End Role="VentasDetalle" EntitySet="VentasDetalles" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="VentasDetalle">
+          <Key>
+            <PropertyRef Name="IdVentaDetalle" />
+          </Key>
+          <Property Name="IdVentaDetalle" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdVenta" Type="Int32" Nullable="false" />
+          <Property Name="IdProducto" Type="Int32" Nullable="false" />
+          <Property Name="Cantidad" Type="Int32" Nullable="false" />
+          <Property Name="Precio" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="Diferencia" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="DiferenciaIdAplica" Type="Int32" />
+          <Property Name="DiferenciaMotivo" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Producto" Relationship="ChoppinModel.FK_VentasDetalle_Productos" FromRole="VentasDetalle" ToRole="Producto" />
+          <NavigationProperty Name="Venta" Relationship="ChoppinModel.FK_VentasDetalle_Ventas" FromRole="VentasDetalle" ToRole="Venta" />
+        </EntityType>
         <Association Name="FK_VentasDetalle_Productos">
-          <End Role="Productos" Type="Self.Producto" Multiplicity="1" />
-          <End Role="VentasDetalle" Type="Self.VentasDetalle" Multiplicity="*" />
+          <End Type="ChoppinModel.Producto" Role="Producto" Multiplicity="1" />
+          <End Type="ChoppinModel.VentasDetalle" Role="VentasDetalle" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Productos">
+            <Principal Role="Producto">
               <PropertyRef Name="IdProducto" />
             </Principal>
             <Dependent Role="VentasDetalle">
@@ -185,10 +208,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_VentasDetalle_Ventas">
-          <End Role="Ventas" Type="Self.Venta" Multiplicity="1" />
-          <End Role="VentasDetalle" Type="Self.VentasDetalle" Multiplicity="0..1" />
+          <End Type="ChoppinModel.Venta" Role="Venta" Multiplicity="1" />
+          <End Type="ChoppinModel.VentasDetalle" Role="VentasDetalle" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Ventas">
+            <Principal Role="Venta">
               <PropertyRef Name="IdVenta" />
             </Principal>
             <Dependent Role="VentasDetalle">
@@ -196,25 +219,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="ChoppinEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Mesas" EntityType="Self.Mesa" />
-          <EntitySet Name="Pagos" EntityType="Self.Pago" />
-          <EntitySet Name="Productos" EntityType="Self.Producto" />
-          <EntitySet Name="Ventas" EntityType="Self.Venta" />
-          <EntitySet Name="VentasDetalles" EntityType="Self.VentasDetalle" />
-          <AssociationSet Name="FK_Ventas_Mesas" Association="Self.FK_Ventas_Mesas">
-            <End Role="Mesas" EntitySet="Mesas" />
-            <End Role="Ventas" EntitySet="Ventas" />
-          </AssociationSet>
-          <AssociationSet Name="FK_VentasDetalle_Productos" Association="Self.FK_VentasDetalle_Productos">
-            <End Role="Productos" EntitySet="Productos" />
-            <End Role="VentasDetalle" EntitySet="VentasDetalles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_VentasDetalle_Ventas" Association="Self.FK_VentasDetalle_Ventas">
-            <End Role="Ventas" EntitySet="Ventas" />
-            <End Role="VentasDetalle" EntitySet="VentasDetalles" />
-          </AssociationSet>
-        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -260,13 +264,15 @@
           <EntitySetMapping Name="VentasDetalles">
             <EntityTypeMapping TypeName="ChoppinModel.VentasDetalle">
               <MappingFragment StoreEntitySet="VentasDetalle">
-                <ScalarProperty Name="IdVenta" ColumnName="IdVenta" />
-                <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
-                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
-                <ScalarProperty Name="Precio" ColumnName="Precio" />
-                <ScalarProperty Name="Diferencia" ColumnName="Diferencia" />
-                <ScalarProperty Name="DiferenciaIdAplica" ColumnName="DiferenciaIdAplica" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
                 <ScalarProperty Name="DiferenciaMotivo" ColumnName="DiferenciaMotivo" />
+                <ScalarProperty Name="DiferenciaIdAplica" ColumnName="DiferenciaIdAplica" />
+                <ScalarProperty Name="Diferencia" ColumnName="Diferencia" />
+                <ScalarProperty Name="Precio" ColumnName="Precio" />
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
+                <ScalarProperty Name="IdVenta" ColumnName="IdVenta" />
+                <ScalarProperty Name="IdVentaDetalle" ColumnName="IdVentaDetalle" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

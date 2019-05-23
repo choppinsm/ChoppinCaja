@@ -14,12 +14,19 @@ namespace ChoppInCaja
     
     public partial class Venta
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Venta()
+        {
+            this.VentasDetalles = new HashSet<VentasDetalle>();
+        }
+    
         public int IdVenta { get; set; }
         public int IdMesa { get; set; }
         public System.DateTime Apertura { get; set; }
         public Nullable<System.DateTime> Cierre { get; set; }
     
         public virtual Mesa Mesa { get; set; }
-        public virtual VentasDetalle VentasDetalle { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<VentasDetalle> VentasDetalles { get; set; }
     }
 }
