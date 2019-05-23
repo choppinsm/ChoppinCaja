@@ -1,0 +1,296 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ChoppinModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Mesas">
+          <Key>
+            <PropertyRef Name="IdMesa" />
+          </Key>
+          <Property Name="IdMesa" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Pagos">
+          <Key>
+            <PropertyRef Name="IdVenta" />
+            <PropertyRef Name="IdMedioPago" />
+          </Key>
+          <Property Name="IdVenta" Type="int" Nullable="false" />
+          <Property Name="IdMedioPago" Type="int" Nullable="false" />
+          <Property Name="Importe" Type="numeric" Precision="18" Scale="4" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Productos">
+          <Key>
+            <PropertyRef Name="IdProducto" />
+          </Key>
+          <Property Name="IdProducto" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Precio" Type="numeric" Precision="18" Scale="4" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Ventas">
+          <Key>
+            <PropertyRef Name="IdVenta" />
+          </Key>
+          <Property Name="IdVenta" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdMesa" Type="int" Nullable="false" />
+          <Property Name="Apertura" Type="datetime" Nullable="false" />
+          <Property Name="Cierre" Type="datetime" />
+        </EntityType>
+        <EntityType Name="VentasDetalle">
+          <Key>
+            <PropertyRef Name="IdVenta" />
+          </Key>
+          <Property Name="IdVenta" Type="int" Nullable="false" />
+          <Property Name="IdProducto" Type="int" Nullable="false" />
+          <Property Name="Cantidad" Type="int" Nullable="false" />
+          <Property Name="Precio" Type="numeric" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="Diferencia" Type="numeric" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="DiferenciaIdAplica" Type="int" />
+          <Property Name="DiferenciaMotivo" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <Association Name="FK_Ventas_Mesas">
+          <End Role="Mesas" Type="Self.Mesas" Multiplicity="1" />
+          <End Role="Ventas" Type="Self.Ventas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Mesas">
+              <PropertyRef Name="IdMesa" />
+            </Principal>
+            <Dependent Role="Ventas">
+              <PropertyRef Name="IdMesa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VentasDetalle_Productos">
+          <End Role="Productos" Type="Self.Productos" Multiplicity="1" />
+          <End Role="VentasDetalle" Type="Self.VentasDetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Productos">
+              <PropertyRef Name="IdProducto" />
+            </Principal>
+            <Dependent Role="VentasDetalle">
+              <PropertyRef Name="IdProducto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VentasDetalle_Ventas">
+          <End Role="Ventas" Type="Self.Ventas" Multiplicity="1" />
+          <End Role="VentasDetalle" Type="Self.VentasDetalle" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Ventas">
+              <PropertyRef Name="IdVenta" />
+            </Principal>
+            <Dependent Role="VentasDetalle">
+              <PropertyRef Name="IdVenta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ChoppinModelStoreContainer">
+          <EntitySet Name="Mesas" EntityType="Self.Mesas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Pagos" EntityType="Self.Pagos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Productos" EntityType="Self.Productos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ventas" EntityType="Self.Ventas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VentasDetalle" EntityType="Self.VentasDetalle" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Ventas_Mesas" Association="Self.FK_Ventas_Mesas">
+            <End Role="Mesas" EntitySet="Mesas" />
+            <End Role="Ventas" EntitySet="Ventas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VentasDetalle_Productos" Association="Self.FK_VentasDetalle_Productos">
+            <End Role="Productos" EntitySet="Productos" />
+            <End Role="VentasDetalle" EntitySet="VentasDetalle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VentasDetalle_Ventas" Association="Self.FK_VentasDetalle_Ventas">
+            <End Role="Ventas" EntitySet="Ventas" />
+            <End Role="VentasDetalle" EntitySet="VentasDetalle" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ChoppinModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Mesa">
+          <Key>
+            <PropertyRef Name="IdMesa" />
+          </Key>
+          <Property Name="IdMesa" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Ventas" Relationship="Self.FK_Ventas_Mesas" FromRole="Mesas" ToRole="Ventas" />
+        </EntityType>
+        <EntityType Name="Pago">
+          <Key>
+            <PropertyRef Name="IdVenta" />
+            <PropertyRef Name="IdMedioPago" />
+          </Key>
+          <Property Name="IdVenta" Type="Int32" Nullable="false" />
+          <Property Name="IdMedioPago" Type="Int32" Nullable="false" />
+          <Property Name="Importe" Type="Decimal" Precision="18" Scale="4" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Producto">
+          <Key>
+            <PropertyRef Name="IdProducto" />
+          </Key>
+          <Property Name="IdProducto" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Precio" Type="Decimal" Precision="18" Scale="4" Nullable="false" />
+          <NavigationProperty Name="VentasDetalles" Relationship="Self.FK_VentasDetalle_Productos" FromRole="Productos" ToRole="VentasDetalle" />
+        </EntityType>
+        <EntityType Name="Venta">
+          <Key>
+            <PropertyRef Name="IdVenta" />
+          </Key>
+          <Property Name="IdVenta" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdMesa" Type="Int32" Nullable="false" />
+          <Property Name="Apertura" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Cierre" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Mesa" Relationship="Self.FK_Ventas_Mesas" FromRole="Ventas" ToRole="Mesas" />
+          <NavigationProperty Name="VentasDetalle" Relationship="Self.FK_VentasDetalle_Ventas" FromRole="Ventas" ToRole="VentasDetalle" />
+        </EntityType>
+        <EntityType Name="VentasDetalle">
+          <Key>
+            <PropertyRef Name="IdVenta" />
+          </Key>
+          <Property Name="IdVenta" Type="Int32" Nullable="false" />
+          <Property Name="IdProducto" Type="Int32" Nullable="false" />
+          <Property Name="Cantidad" Type="Int32" Nullable="false" />
+          <Property Name="Precio" Type="Decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="Diferencia" Type="Decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="DiferenciaIdAplica" Type="Int32" />
+          <Property Name="DiferenciaMotivo" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Producto" Relationship="Self.FK_VentasDetalle_Productos" FromRole="VentasDetalle" ToRole="Productos" />
+          <NavigationProperty Name="Venta" Relationship="Self.FK_VentasDetalle_Ventas" FromRole="VentasDetalle" ToRole="Ventas" />
+        </EntityType>
+        <Association Name="FK_Ventas_Mesas">
+          <End Role="Mesas" Type="Self.Mesa" Multiplicity="1" />
+          <End Role="Ventas" Type="Self.Venta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Mesas">
+              <PropertyRef Name="IdMesa" />
+            </Principal>
+            <Dependent Role="Ventas">
+              <PropertyRef Name="IdMesa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VentasDetalle_Productos">
+          <End Role="Productos" Type="Self.Producto" Multiplicity="1" />
+          <End Role="VentasDetalle" Type="Self.VentasDetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Productos">
+              <PropertyRef Name="IdProducto" />
+            </Principal>
+            <Dependent Role="VentasDetalle">
+              <PropertyRef Name="IdProducto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VentasDetalle_Ventas">
+          <End Role="Ventas" Type="Self.Venta" Multiplicity="1" />
+          <End Role="VentasDetalle" Type="Self.VentasDetalle" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Ventas">
+              <PropertyRef Name="IdVenta" />
+            </Principal>
+            <Dependent Role="VentasDetalle">
+              <PropertyRef Name="IdVenta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ChoppinEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Mesas" EntityType="Self.Mesa" />
+          <EntitySet Name="Pagos" EntityType="Self.Pago" />
+          <EntitySet Name="Productos" EntityType="Self.Producto" />
+          <EntitySet Name="Ventas" EntityType="Self.Venta" />
+          <EntitySet Name="VentasDetalles" EntityType="Self.VentasDetalle" />
+          <AssociationSet Name="FK_Ventas_Mesas" Association="Self.FK_Ventas_Mesas">
+            <End Role="Mesas" EntitySet="Mesas" />
+            <End Role="Ventas" EntitySet="Ventas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VentasDetalle_Productos" Association="Self.FK_VentasDetalle_Productos">
+            <End Role="Productos" EntitySet="Productos" />
+            <End Role="VentasDetalle" EntitySet="VentasDetalles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VentasDetalle_Ventas" Association="Self.FK_VentasDetalle_Ventas">
+            <End Role="Ventas" EntitySet="Ventas" />
+            <End Role="VentasDetalle" EntitySet="VentasDetalles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ChoppinModelStoreContainer" CdmEntityContainer="ChoppinEntities">
+          <EntitySetMapping Name="Mesas">
+            <EntityTypeMapping TypeName="ChoppinModel.Mesa">
+              <MappingFragment StoreEntitySet="Mesas">
+                <ScalarProperty Name="IdMesa" ColumnName="IdMesa" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Pagos">
+            <EntityTypeMapping TypeName="ChoppinModel.Pago">
+              <MappingFragment StoreEntitySet="Pagos">
+                <ScalarProperty Name="IdVenta" ColumnName="IdVenta" />
+                <ScalarProperty Name="IdMedioPago" ColumnName="IdMedioPago" />
+                <ScalarProperty Name="Importe" ColumnName="Importe" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Productos">
+            <EntityTypeMapping TypeName="ChoppinModel.Producto">
+              <MappingFragment StoreEntitySet="Productos">
+                <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Precio" ColumnName="Precio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ventas">
+            <EntityTypeMapping TypeName="ChoppinModel.Venta">
+              <MappingFragment StoreEntitySet="Ventas">
+                <ScalarProperty Name="IdVenta" ColumnName="IdVenta" />
+                <ScalarProperty Name="IdMesa" ColumnName="IdMesa" />
+                <ScalarProperty Name="Apertura" ColumnName="Apertura" />
+                <ScalarProperty Name="Cierre" ColumnName="Cierre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VentasDetalles">
+            <EntityTypeMapping TypeName="ChoppinModel.VentasDetalle">
+              <MappingFragment StoreEntitySet="VentasDetalle">
+                <ScalarProperty Name="IdVenta" ColumnName="IdVenta" />
+                <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="Precio" ColumnName="Precio" />
+                <ScalarProperty Name="Diferencia" ColumnName="Diferencia" />
+                <ScalarProperty Name="DiferenciaIdAplica" ColumnName="DiferenciaIdAplica" />
+                <ScalarProperty Name="DiferenciaMotivo" ColumnName="DiferenciaMotivo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
