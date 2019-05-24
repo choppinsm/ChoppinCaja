@@ -13,10 +13,17 @@ namespace ChoppInCaja
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			var splash = new Splash();
-			Application.Run(splash);
-			var formVentas = new FormVentas(splash.Mesas, splash.Productos);
-			Application.Run(formVentas);
+			var formSplash = new FormSplash();
+			Application.Run(formSplash);
+			if(formSplash.IrABM)
+			{
+				var formABM = new FormABM(formSplash.Tablas);
+				Application.Run(formABM);
+			}
+			else{
+				var formVentas = new FormVentas(formSplash.Mesas, formSplash.Productos);
+				Application.Run(formVentas);
+			}
 		}
 	}
 }

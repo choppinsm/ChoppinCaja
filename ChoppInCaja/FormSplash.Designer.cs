@@ -1,6 +1,6 @@
 ﻿namespace ChoppInCaja
 {
-	partial class Splash
+	partial class FormSplash
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -42,7 +42,7 @@
 			this.label1.TabIndex = 0;
 			this.label1.Text = "Inicializando sistema";
 			// 
-			// Splash
+			// FormSplash
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -50,11 +50,11 @@
 			this.ClientSize = new System.Drawing.Size(449, 67);
 			this.ControlBox = false;
 			this.Controls.Add(this.label1);
-			this.Name = "Splash";
-			this.Opacity = 0.9D;
+			this.Name = "FormSplash";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.Text = "Choppin Caja";
 			this.Shown += new System.EventHandler(this.Splash_Shown);
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormSplash_KeyDown);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
