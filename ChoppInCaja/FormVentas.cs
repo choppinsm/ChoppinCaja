@@ -29,13 +29,15 @@ namespace ChoppInCaja
 			column.DataPropertyName = "IdMesa";
 			column.ReadOnly = true;
 			column.Width = 50;
-			columns.Add(column);
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            columns.Add(column);
 			column = new DataGridViewTextBoxColumn();
 			column.HeaderText = column.Name = "Mesa";
 			column.DataPropertyName = "Nombre";
 			column.ReadOnly = true;
 			column.Width = 150;
-			columns.Add(column);
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            columns.Add(column);
 
 			gridMesaDetalle.AutoGenerateColumns = false;
 			gridMesaDetalle.EnableHeadersVisualStyles = false;
@@ -45,14 +47,16 @@ namespace ChoppInCaja
 			column.DataPropertyName = "IdVentaDetalle";
 			column.ReadOnly = true;
 			column.Width = 50;
-			columns.Add(column);
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            columns.Add(column);
 
 			column = new DataGridViewTextBoxColumn();
 			column.HeaderText = column.Name = "Cant";
 			column.DataPropertyName = "Cantidad";
 			column.ValueType = typeof(int);
 			column.Width = 100;
-			columns.Add(column);
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            columns.Add(column);
 
 			var cmb = new DataGridViewComboBoxColumn();
 			cmb.HeaderText = "Producto";
@@ -61,8 +65,8 @@ namespace ChoppInCaja
 			cmb.DataPropertyName = "IdProducto";
 			cmb.MaxDropDownItems = 5;
 			cmb.DataSource = productos;
-			columns.Add(cmb);
-
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            columns.Add(cmb);
 
 			column = new DataGridViewTextBoxColumn();
 			column.DataPropertyName = column.HeaderText = column.Name = "Importe";
@@ -70,6 +74,7 @@ namespace ChoppInCaja
 			column.DefaultCellStyle.Format = "C2";
 			column.DefaultCellStyle.FormatProvider = new CultureInfo("es-AR");
 			column.ReadOnly = true;
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 			columns.Add(column);
 			column = new DataGridViewTextBoxColumn();
 			column.DataPropertyName = column.HeaderText = column.Name = "Precio";
@@ -77,35 +82,44 @@ namespace ChoppInCaja
 			column.DefaultCellStyle.Format = "C2";
 			column.DefaultCellStyle.FormatProvider = new CultureInfo("es-AR");
 			column.ReadOnly = true;
-			columns.Add(column);
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            columns.Add(column);
 			column = new DataGridViewTextBoxColumn();
 			column.DataPropertyName = column.HeaderText = column.Name = "PxC";
 			column.ValueType = typeof(decimal);
 			column.DefaultCellStyle.Format = "C2";
 			column.DefaultCellStyle.FormatProvider = new CultureInfo("es-AR");
 			column.ReadOnly = true;
-			columns.Add(column);
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            columns.Add(column);
 			column = new DataGridViewTextBoxColumn();
 			column.DataPropertyName = column.HeaderText = column.Name = "Diferencia";
 			column.ValueType = typeof(decimal);
 			column.DefaultCellStyle.Format = "C2";
 			column.DefaultCellStyle.FormatProvider = new CultureInfo("es-AR");
-			columns.Add(column);
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            columns.Add(column);
 
-			column = new DataGridViewTextBoxColumn();
-			column.DataPropertyName = column.HeaderText = column.Name = "AplicaDiferencia";
-			column.ValueType = typeof(decimal);
-			column.DefaultCellStyle.Format = "C2";
-			column.DefaultCellStyle.FormatProvider = new CultureInfo("es-AR");
-			column.Visible = false;
-			columns.Add(column);
+
+            cmb = new DataGridViewComboBoxColumn();
+            cmb.HeaderText = "AplicaDiferencia";
+            cmb.ValueMember = "Value";
+            cmb.DisplayMember = "Display";
+            cmb.DataPropertyName = "IdProducto";
+            cmb.DataSource = new List<Equipo>((Equipo[])Enum.GetValues(typeof(Equipo)))
+                .Select(value => new { Display = value.ToString(), Value = (int)value })
+                .ToList();
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            columns.Add(cmb);
 
 			column = new DataGridViewTextBoxColumn();
 			column.DataPropertyName = column.HeaderText = column.Name = "Motivo";
 			column.ValueType = typeof(decimal);
 			column.DefaultCellStyle.Format = "C2";
 			column.DefaultCellStyle.FormatProvider = new CultureInfo("es-AR");
-			columns.Add(column);
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            column.Width = 150;
+            columns.Add(column);
 		}
 
 		private void Ventas_Load(object sender, EventArgs e)
@@ -166,7 +180,9 @@ namespace ChoppInCaja
 							};
 				var registros = venta.ToList();
 				registros.Add(NuevoItem(idVenta));
-				gridMesaDetalle.DataSource = registros;
+                gridMesaDetalle.AutoGenerateColumns = false;
+
+                gridMesaDetalle.DataSource = registros;
 				MostrarDetalle();
 			}
 		}
