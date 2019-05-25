@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.GridMesas = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.gridMesaDetalle = new System.Windows.Forms.DataGridView();
@@ -59,7 +59,7 @@
             this.GridMesas.Name = "GridMesas";
             this.GridMesas.ReadOnly = true;
             this.GridMesas.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.GridMesas.Size = new System.Drawing.Size(394, 686);
+            this.GridMesas.Size = new System.Drawing.Size(319, 704);
             this.GridMesas.TabIndex = 0;
             this.GridMesas.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.GridMesas_DataError);
             this.GridMesas.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridMesas_RowEnter);
@@ -87,16 +87,16 @@
             this.gridMesaDetalle.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.gridMesaDetalle.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridMesaDetalle.GridColor = System.Drawing.Color.Black;
-            this.gridMesaDetalle.Location = new System.Drawing.Point(415, 46);
+            this.gridMesaDetalle.Location = new System.Drawing.Point(340, 46);
             this.gridMesaDetalle.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.gridMesaDetalle.Name = "gridMesaDetalle";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Wingdings", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridMesaDetalle.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Wingdings", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridMesaDetalle.RowHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.gridMesaDetalle.RowHeadersWidth = 70;
             this.gridMesaDetalle.RowTemplate.Height = 40;
-            this.gridMesaDetalle.Size = new System.Drawing.Size(825, 636);
+            this.gridMesaDetalle.Size = new System.Drawing.Size(1185, 654);
             this.gridMesaDetalle.TabIndex = 2;
             this.gridMesaDetalle.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridMesaDetalle_CellValueChanged);
             this.gridMesaDetalle.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.gridMesaDetalle_DataError);
@@ -107,9 +107,9 @@
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblEstado});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 745);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 763);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1258, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1538, 22);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -122,21 +122,23 @@
             // 
             // lblTotal
             // 
+            this.lblTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblTotal.AutoSize = true;
-            this.lblTotal.Font = new System.Drawing.Font("Consolas", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotal.Font = new System.Drawing.Font("Consolas", 16F);
             this.lblTotal.ForeColor = System.Drawing.Color.White;
-            this.lblTotal.Location = new System.Drawing.Point(414, 690);
+            this.lblTotal.Location = new System.Drawing.Point(339, 708);
             this.lblTotal.Name = "lblTotal";
-            this.lblTotal.Size = new System.Drawing.Size(38, 42);
+            this.lblTotal.Size = new System.Drawing.Size(35, 37);
             this.lblTotal.TabIndex = 4;
             this.lblTotal.Text = "$";
             // 
             // btnCerrarMesa
             // 
+            this.btnCerrarMesa.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCerrarMesa.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCerrarMesa.Location = new System.Drawing.Point(1044, 690);
+            this.btnCerrarMesa.Location = new System.Drawing.Point(1338, 708);
             this.btnCerrarMesa.Name = "btnCerrarMesa";
-            this.btnCerrarMesa.Size = new System.Drawing.Size(196, 42);
+            this.btnCerrarMesa.Size = new System.Drawing.Size(187, 37);
             this.btnCerrarMesa.TabIndex = 5;
             this.btnCerrarMesa.Text = "Cerrar Mesa";
             this.btnCerrarMesa.UseVisualStyleBackColor = true;
@@ -145,7 +147,7 @@
             // CboVentas
             // 
             this.CboVentas.FormattingEnabled = true;
-            this.CboVentas.Location = new System.Drawing.Point(571, 14);
+            this.CboVentas.Location = new System.Drawing.Point(496, 14);
             this.CboVentas.Name = "CboVentas";
             this.CboVentas.Size = new System.Drawing.Size(286, 28);
             this.CboVentas.TabIndex = 6;
@@ -156,7 +158,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Arial", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(472, 13);
+            this.label2.Location = new System.Drawing.Point(397, 13);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(97, 28);
@@ -168,7 +170,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SeaGreen;
-            this.ClientSize = new System.Drawing.Size(1258, 767);
+            this.ClientSize = new System.Drawing.Size(1538, 785);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.CboVentas);
             this.Controls.Add(this.btnCerrarMesa);
