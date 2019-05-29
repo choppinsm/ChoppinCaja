@@ -8,8 +8,8 @@ namespace ChoppInCaja.Model
 {
     public enum Equipo
     {
-        Gonza,
-        Omar,
-        Sebas
+        Gonza = 1,
+        Omar = 2,
+        Sebas = 3
     }
 }

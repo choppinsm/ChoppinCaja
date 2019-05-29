@@ -138,7 +138,7 @@ namespace ChoppInCaja
 			{
 				return;
 			}
-			ultimaIdMesaSeleccionada = mesa.IdMesa;
+            ultimaIdMesaSeleccionada = mesa.IdMesa;
 			using (var context = new ChoppinEntities())
 			{
 				var ventaAbierta = (from venta in context.Ventas
@@ -147,19 +147,19 @@ namespace ChoppInCaja
 								   ).FirstOrDefault();
 				if (ventaAbierta == null)
 				{
-					BeginInvoke((Action)(() =>
-					{
-						AgregarVenta(mesa.IdMesa);
-					}));
-				}
+                    btnAbrirCerrarMesa.Text = "Abrir mesa";
+                    btnAbrirCerrarMesa.Tag = true;
+                    OcultarDetalle();
+                }
 				else
 				{
-					RefrescarVenta(ventaAbierta.IdVenta);
+                    RefrescarVenta(ventaAbierta.IdVenta);
 				}
 			}
-		}
+            btnAbrirCerrarMesa.Visible = true;
+        }
 
-		private void RefrescarVenta(int idVenta)
+        private void RefrescarVenta(int idVenta)
 		{
 			lblEstado.Text = $"IdVenta = {idVenta}";
 			using (var context = new ChoppinEntities())
@@ -179,13 +179,15 @@ namespace ChoppInCaja
 								Fecha = item.Fecha
 							};
 				var registros = venta.ToList();
-				registros.Add(NuevoItem(idVenta));
+                registros.Add(NuevoItem(idVenta));
                 gridMesaDetalle.AutoGenerateColumns = false;
 
                 gridMesaDetalle.DataSource = registros;
 				MostrarDetalle();
-			}
-		}
+                btnAbrirCerrarMesa.Text = "Cerrar mesa";
+                btnAbrirCerrarMesa.Tag = false;
+            }
+        }
 
 		private static VentaDetalleVM NuevoItem(int idVenta)
 		{
@@ -202,31 +204,49 @@ namespace ChoppInCaja
 
 		private void AgregarVenta(int idMesa)
 		{
-			var confirmResult = MessageBox.Show(this, "¿Abrir la mesa?", "Confirm Delete!!", MessageBoxButtons.YesNo);
-			if (confirmResult == DialogResult.Yes)
-			{
-				var ventaAbierta = new Venta
-				{
-					Apertura = DateTime.Now,
-					IdMesa = idMesa
-				};
-				using (var context = new ChoppinEntities())
-				{
-					context.Ventas.Add(ventaAbierta);
-					context.SaveChanges();
-					RefrescarCboVentas();
-					CboVentas.SelectedItem = null;
-					CboVentas.Text = "";
-				}
-				RefrescarVenta(ventaAbierta.IdVenta);
-			}
-			else
-			{
-				OcultarDetalle();
-			}
-		}
+            var confirmResult = MessageBox.Show(this, "¿Abrir la mesa?", "Confirm Delete!!", MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
+            {
+                var ventaAbierta = new Venta
+                {
+                    Apertura = DateTime.Now,
+                    IdMesa = idMesa
+                };
+                using (var context = new ChoppinEntities())
+                {
+                    context.Ventas.Add(ventaAbierta);
+                    context.SaveChanges();
+                    RefrescarCboVentas();
+                    CboVentas.SelectedItem = null;
+                    CboVentas.Text = "";
+                }
+                RefrescarVenta(ventaAbierta.IdVenta);
 
-		private void OcultarDetalle()
+            }
+        }
+
+        private void CerrarVenta()
+        {
+            var confirmResult = MessageBox.Show(this, "¿Cerrar la mesa? \r\nPor favor solo cerrar cuando se haya pagado", "Mesa", MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
+            {
+                var idVenta = ((VentaDetalleVM)gridMesaDetalle.Rows[0].DataBoundItem).IdVenta;
+                using (var context = new ChoppinEntities())
+                {
+                    var venta = context.Ventas
+                        .Single(v => v.IdVenta == idVenta)
+                        .Cierre = DateTime.Now;
+                    context.SaveChanges();
+                    RefrescarCboVentas();
+                    OcultarDetalle();
+                    GridMesas.ClearSelection();
+                    btnAbrirCerrarMesa.Visible = false;
+                    ultimaIdMesaSeleccionada = -1;
+                }
+            }
+        }
+
+        private void OcultarDetalle()
 		{
 			gridMesaDetalle.Hide();
 			lblEstado.Text = "";
@@ -237,6 +257,7 @@ namespace ChoppInCaja
 		{
 			gridMesaDetalle.Show();
 			RefrescarDetalle();
+            gridMesaDetalle.Enabled = ultimaIdMesaSeleccionada > 0;
 		}
 
 		private void gridMesaDetalle_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -248,7 +269,7 @@ namespace ChoppInCaja
 		{
 			if (gridMesaDetalle.CurrentCell.ColumnIndex == 2)
 			{
-				ComboBox cmbox = e.Control as ComboBox;
+				var cmbox = e.Control as DataGridViewComboBoxEditingControl;
 				try {
 					cmbox.SelectedValueChanged -= GridMesaDetalle_CboProducto_SelectedValueChanged;
 				}
@@ -257,7 +278,9 @@ namespace ChoppInCaja
 					cmbox.SelectedValueChanged += GridMesaDetalle_CboProducto_SelectedValueChanged;
 				}
 				catch { }
-			}
+                cmbox.DropDownStyle = ComboBoxStyle.DropDown;
+                cmbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            }
 		}
 
 		private void GridMesaDetalle_CboProducto_SelectedValueChanged(object sender, EventArgs e)
@@ -335,34 +358,28 @@ namespace ChoppInCaja
 
 		}
 
-		private void btnCerrarMesa_Click(object sender, EventArgs e)
+		private void btnAbrirCerrarMesa_Click(object sender, EventArgs e)
+        {
+            if ((bool)btnAbrirCerrarMesa.Tag)
+            {
+                AgregarVenta(ultimaIdMesaSeleccionada);
+            }
+            else
+            {
+                CerrarVenta();
+            }
+        }
+        
+        private void RefrescarCboVentas()
 		{
-			var confirmResult = MessageBox.Show(this, "¿Cerrar la mesa? \r\nPor favor solo cerrar cuando se haya pagado", "Mesa", MessageBoxButtons.YesNo);
-			if (confirmResult == DialogResult.Yes)
-			{
-				var idVenta = ((VentaDetalleVM)gridMesaDetalle.Rows[0].DataBoundItem).IdVenta;
-				using (var context = new ChoppinEntities())
-				{
-					var venta = context.Ventas
-						.Single(v => v.IdVenta == idVenta)
-						.Cierre = DateTime.Now;
-					context.SaveChanges();
-					OcultarDetalle();
-					RefrescarCboVentas();
-				}
-			}
-		}
-
-		private void RefrescarCboVentas()
-		{
-			using (var context = new ChoppinEntities())
+            using (var context = new ChoppinEntities())
 			{
 				var ventas = context.Ventas.ToList();
 				ventas.Insert(0, new Venta
 				{
 					IdVenta = 0
 				});
-				CboVentas.DataSource = context.Ventas.ToList();
+				CboVentas.DataSource = ventas.ToList();
 				RefrescarVenta(0);
 			}
 		}
@@ -371,10 +388,33 @@ namespace ChoppInCaja
 		{
 			if (CboVentas.SelectedItem != null)
 			{
-				var idVenta = ((Venta)CboVentas.SelectedItem).IdVenta;
-				RefrescarVenta(idVenta);
+                btnAbrirCerrarMesa.Visible = false;
+                var venta = (Venta)CboVentas.SelectedItem;
+                var idVenta = venta.IdVenta;
+                if(venta.Cierre != null)
+                {
+                    ultimaIdMesaSeleccionada = -1;
+                    GridMesas.ClearSelection();
+                    btnAbrirCerrarMesa.Visible = false;
+                }
+                RefrescarVenta(idVenta);
 				MostrarDetalle();
-			}
+            }
 		}
-	}
+
+        private void BtnABM_Click(object sender, EventArgs e)
+        {
+            Program.ActualizarTablas();
+            var formABM = new FormABM(Program.Tablas);
+            formABM.FormClosed += FormABM_FormClosed;
+            formABM.Show(this);
+        }
+
+        private void FormABM_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Program.ActualizarTablas();
+            this.mesas = Program.Mesas;
+            this.productos = Program.Productos;
+        }
+    }
 }
