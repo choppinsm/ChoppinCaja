@@ -49,6 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CajasCerradas.cs">
+      <DependentUpon>ChoppinModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="FormABM.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -69,6 +72,18 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ChoppinModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="FormCaja.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCaja.Designer.cs">
+      <DependentUpon>FormCaja.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPago.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPago.Designer.cs">
+      <DependentUpon>FormPago.cs</DependentUpon>
     </Compile>
     <Compile Include="Mesa.cs">
       <DependentUpon>ChoppinModel.tt</DependentUpon>
@@ -106,6 +121,12 @@
     </Compile>
     <EmbeddedResource Include="FormABM.resx">
       <DependentUpon>FormABM.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCaja.resx">
+      <DependentUpon>FormCaja.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPago.resx">
+      <DependentUpon>FormPago.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSplash.resx">
       <DependentUpon>FormSplash.cs</DependentUpon>

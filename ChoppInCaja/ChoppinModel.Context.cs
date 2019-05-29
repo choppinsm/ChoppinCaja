@@ -26,9 +26,10 @@ namespace ChoppInCaja
         }
     
         public virtual DbSet<Mesa> Mesas { get; set; }
-        public virtual DbSet<Pago> Pagos { get; set; }
         public virtual DbSet<Producto> Productos { get; set; }
         public virtual DbSet<Venta> Ventas { get; set; }
         public virtual DbSet<VentasDetalle> VentasDetalles { get; set; }
+        public virtual DbSet<Pago> Pagos { get; set; }
+        public virtual DbSet<CajasCerradas> CajasCerradas { get; set; }
     }
 }

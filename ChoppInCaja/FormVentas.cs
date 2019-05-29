@@ -225,23 +225,62 @@ namespace ChoppInCaja
             }
         }
 
+        FormPago formPago = new FormPago();
         private void CerrarVenta()
         {
-            var confirmResult = MessageBox.Show(this, "¿Cerrar la mesa? \r\nPor favor solo cerrar cuando se haya pagado", "Mesa", MessageBoxButtons.YesNo);
-            if (confirmResult == DialogResult.Yes)
+            var items = ((List<VentaDetalleVM>)gridMesaDetalle.DataSource);
+            formPago.Total = items.Sum(i => i.Importe);
+            formPago.Pagado = false;
+            formPago.FormClosing += FormPago_FormClosing;
+            formPago.Show(this);
+        }
+
+        private void FormPago_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!formPago.Visible)
+                return;
+            e.Cancel = true;
+            formPago.Hide();
+            if (formPago.Pagado)
             {
                 var idVenta = ((VentaDetalleVM)gridMesaDetalle.Rows[0].DataBoundItem).IdVenta;
                 using (var context = new ChoppinEntities())
                 {
-                    var venta = context.Ventas
-                        .Single(v => v.IdVenta == idVenta)
-                        .Cierre = DateTime.Now;
-                    context.SaveChanges();
-                    RefrescarCboVentas();
-                    OcultarDetalle();
-                    GridMesas.ClearSelection();
-                    btnAbrirCerrarMesa.Visible = false;
-                    ultimaIdMesaSeleccionada = -1;
+                    try
+                    {
+                        context.Database.BeginTransaction();
+                        var venta = context.Ventas
+                            .Single(v => v.IdVenta == idVenta)
+                            .Cierre = DateTime.Now;
+                        if (formPago.Efectivo > 0)
+                        {
+                            context.Pagos.Add(new Pago
+                            {
+                                IdMedioPago = (int)MediosDePago.Efectivo,
+                                IdVenta = ((VentaDetalleVM)gridMesaDetalle.Rows[0].DataBoundItem).IdVenta,
+                                Importe = formPago.Efectivo
+                            });
+                        }
+                        if (formPago.Tarjeta > 0)
+                        {
+                            context.Pagos.Add(new Pago
+                            {
+                                IdMedioPago = (int)MediosDePago.Tarjeta,
+                                IdVenta = ((VentaDetalleVM)gridMesaDetalle.Rows[0].DataBoundItem).IdVenta,
+                                Importe = formPago.Tarjeta
+                            });
+                        }
+                        context.SaveChanges();
+                        RefrescarCboVentas();
+                        OcultarDetalle();
+                        GridMesas.ClearSelection();
+                        btnAbrirCerrarMesa.Visible = false;
+                        ultimaIdMesaSeleccionada = -1;
+                        context.Database.CurrentTransaction.Commit();
+                    }
+                    catch {
+                        context.Database.CurrentTransaction.Rollback();
+                    }
                 }
             }
         }
@@ -415,6 +454,11 @@ namespace ChoppInCaja
             Program.ActualizarTablas();
             this.mesas = Program.Mesas;
             this.productos = Program.Productos;
+        }
+
+        private void BtnCerrarCaja_Click(object sender, EventArgs e)
+        {
+            new FormCaja().Show();
         }
     }
 }

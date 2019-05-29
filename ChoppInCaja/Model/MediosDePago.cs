@@ -8,7 +8,7 @@ namespace ChoppInCaja.Model
 {
     public enum MediosDePago
     {
-        Efectivo,
-        Tarjeta
+        Efectivo = 1,
+        Tarjeta = 2
     }
 }

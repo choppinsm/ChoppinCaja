@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.GridMesas = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.gridMesaDetalle = new System.Windows.Forms.DataGridView();
@@ -39,6 +39,7 @@
             this.CboVentas = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.BtnABM = new System.Windows.Forms.Button();
+            this.BtnCerrarCaja = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.GridMesas)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridMesaDetalle)).BeginInit();
             this.statusStrip1.SuspendLayout();
@@ -91,10 +92,10 @@
             this.gridMesaDetalle.Location = new System.Drawing.Point(340, 46);
             this.gridMesaDetalle.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.gridMesaDetalle.Name = "gridMesaDetalle";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Wingdings", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridMesaDetalle.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Wingdings", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridMesaDetalle.RowHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.gridMesaDetalle.RowHeadersWidth = 70;
             this.gridMesaDetalle.RowTemplate.Height = 40;
             this.gridMesaDetalle.Size = new System.Drawing.Size(1185, 615);
@@ -128,7 +129,7 @@
             this.lblTotal.AutoSize = true;
             this.lblTotal.Font = new System.Drawing.Font("Consolas", 16F);
             this.lblTotal.ForeColor = System.Drawing.Color.White;
-            this.lblTotal.Location = new System.Drawing.Point(534, 675);
+            this.lblTotal.Location = new System.Drawing.Point(352, 676);
             this.lblTotal.Name = "lblTotal";
             this.lblTotal.Size = new System.Drawing.Size(35, 37);
             this.lblTotal.TabIndex = 4;
@@ -178,12 +179,25 @@
             this.BtnABM.UseVisualStyleBackColor = true;
             this.BtnABM.Click += new System.EventHandler(this.BtnABM_Click);
             // 
+            // BtnCerrarCaja
+            // 
+            this.BtnCerrarCaja.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BtnCerrarCaja.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BtnCerrarCaja.Location = new System.Drawing.Point(939, 675);
+            this.BtnCerrarCaja.Name = "BtnCerrarCaja";
+            this.BtnCerrarCaja.Size = new System.Drawing.Size(188, 54);
+            this.BtnCerrarCaja.TabIndex = 9;
+            this.BtnCerrarCaja.Text = "Cerrar Caja";
+            this.BtnCerrarCaja.UseVisualStyleBackColor = true;
+            this.BtnCerrarCaja.Click += new System.EventHandler(this.BtnCerrarCaja_Click);
+            // 
             // FormVentas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SeaGreen;
             this.ClientSize = new System.Drawing.Size(1538, 785);
+            this.Controls.Add(this.BtnCerrarCaja);
             this.Controls.Add(this.BtnABM);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.CboVentas);
@@ -218,6 +232,7 @@
         private System.Windows.Forms.ComboBox CboVentas;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button BtnABM;
+        private System.Windows.Forms.Button BtnCerrarCaja;
     }
 }
 

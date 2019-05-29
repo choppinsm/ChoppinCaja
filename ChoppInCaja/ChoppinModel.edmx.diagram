@@ -6,13 +6,14 @@
     <edmx:Diagrams>
       <Diagram DiagramId="fd42f76c352945b4910e9e25e74cb44b" Name="Diagram1">
         <EntityTypeShape EntityType="ChoppinModel.Mesa" Width="1.5" PointX="0.875" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ChoppinModel.Pago" Width="1.5" PointX="4" PointY="4" IsExpanded="true" />
-        <EntityTypeShape EntityType="ChoppinModel.Producto" Width="1.5" PointX="0.5" PointY="2.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ChoppinModel.Venta" Width="1.5" PointX="3.25" PointY="0.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ChoppinModel.Producto" Width="1.5" PointX="10.625" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ChoppinModel.Venta" Width="1.5" PointX="4.625" PointY="0.625" IsExpanded="true" />
         <AssociationConnector Association="ChoppinModel.FK_Ventas_Mesas" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="ChoppinModel.VentasDetalle" Width="1.5" PointX="5.5" PointY="0.75" />
+        <EntityTypeShape EntityType="ChoppinModel.VentasDetalle" Width="1.5" PointX="7.125" PointY="0.875" />
         <AssociationConnector Association="ChoppinModel.FK_VentasDetalle_Productos" />
         <AssociationConnector Association="ChoppinModel.FK_VentasDetalle_Ventas" />
+        <EntityTypeShape EntityType="ChoppinModel.Pago" Width="1.5" PointX="3.375" PointY="3.75" />
+        <EntityTypeShape EntityType="ChoppinModel.CajasCerradas" Width="1.5" PointX="0.75" PointY="3.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
