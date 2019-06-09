@@ -65,6 +65,7 @@
             this.GridMesas.TabIndex = 0;
             this.GridMesas.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.GridMesas_DataError);
             this.GridMesas.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridMesas_RowEnter);
+            this.GridMesas.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.GridMesas_RowPrePaint);
             // 
             // label1
             // 
@@ -100,7 +101,6 @@
             this.gridMesaDetalle.RowTemplate.Height = 40;
             this.gridMesaDetalle.Size = new System.Drawing.Size(1185, 615);
             this.gridMesaDetalle.TabIndex = 2;
-            this.gridMesaDetalle.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridMesaDetalle_CellValueChanged);
             this.gridMesaDetalle.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.gridMesaDetalle_DataError);
             this.gridMesaDetalle.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.gridMesaDetalle_EditingControlShowing);
             // 

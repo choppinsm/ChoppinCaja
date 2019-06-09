@@ -9,6 +9,8 @@ namespace ChoppInCaja.Model
     public class MesaVM
     {
         public int IdMesa { get; set; }
-        public int Nombre { get; set; }
+        public string Nombre { get; set; }
+        public int IdVenta => MesaVenta?.IdVenta ?? 0;
+        public Venta MesaVenta;
     }
 }

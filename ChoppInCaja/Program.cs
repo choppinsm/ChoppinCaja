@@ -51,7 +51,6 @@ namespace ChoppInCaja
                 Productos = (from producto in context.Productos
                              select producto
                         ).ToList();
-
                 Tablas = context.Database
                             .SqlQuery<string>("select name as Tabla from sys.objects where type = 'U'")
                             .ToList();

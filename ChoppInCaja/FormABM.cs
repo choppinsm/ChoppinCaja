@@ -32,6 +32,7 @@ namespace ChoppInCaja
 
 		private void RefrescarTabla()
 		{
+            try {
 			using (var context = new ChoppinEntities())
 			{
 				var contextTabla = context.GetType().GetProperty(TablaNombre);
@@ -41,8 +42,13 @@ namespace ChoppInCaja
 				GridTabla.AutoGenerateColumns = true;
 				GridTabla.DataSource = registros;
 				GridTabla.Refresh();
-			}
-		}
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
 
 		private void GridTabla_DataError(object sender, DataGridViewDataErrorEventArgs e)
 		{
@@ -79,13 +85,49 @@ namespace ChoppInCaja
 			}
 		}
 
-		private void BtnEjecutar_Click(object sender, EventArgs e)
-		{
-			using (var context = new ChoppinEntities())
-			{
-				context.Database.ExecuteSqlCommand(TxtSql.Text);
-			}
-			RefrescarTabla();
-		}
-	}
+        private void BtnEjecutar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var context = new ChoppinEntities())
+                {
+                    context.Database.ExecuteSqlCommand(TxtSql.Text);
+                }
+                RefrescarTabla();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void BtnMostrarSQL_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var context = new ChoppinEntities())
+                {
+                    var connection = context.Database.Connection;
+                    connection.Open();
+                    using (var cmd = connection.CreateCommand())
+                    {
+                        var dt = new DataTable();
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = TxtSql.Text;
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            dt.Load(reader);
+                            GridTabla.DataSource = dt;
+                            GridTabla.Refresh();
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+    }
 }

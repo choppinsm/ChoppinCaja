@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -12,8 +13,8 @@ namespace ChoppInCaja
 	{
 		public FormVentas(List<Mesa> mesas, List<Producto> productos)
 		{
-			this.mesas = mesas;
-			this.productos = productos;
+            refrescarMesas();
+            this.productos = productos;
 			InitializeComponent();
 
 			CboVentas.ValueMember = "IdVenta";
@@ -128,12 +129,12 @@ namespace ChoppInCaja
 		}
 
 		private int ultimaIdMesaSeleccionada = -1;
-		private List<Mesa> mesas;
+		private List<MesaVM> mesas;
 		private List<Producto> productos;
 
 		private void GridMesas_RowEnter(object sender, DataGridViewCellEventArgs e)
 		{
-			var mesa = (Mesa)GridMesas.Rows[e.RowIndex].DataBoundItem;
+			var mesa = (MesaVM)GridMesas.Rows[e.RowIndex].DataBoundItem;
 			if (mesa.IdMesa == ultimaIdMesaSeleccionada)
 			{
 				return;
@@ -334,57 +335,10 @@ namespace ChoppInCaja
 
 		private void gridMesaDetalle_CellValueChanged(object sender, DataGridViewCellEventArgs e)
 		{
-			var idxItem = gridMesaDetalle.SelectedCells[0].RowIndex;
-			var items = ((List<VentaDetalleVM>)gridMesaDetalle.DataSource);
-			var item = items[idxItem];
-			try
-			{
-				using (var context = new ChoppinEntities())
-				{
-					VentasDetalle itemActual;
-					if (item.IdVentaDetalle == 0)
-					{
-						itemActual = new VentasDetalle
-						{
-							IdVenta = item.IdVenta,
-							IdProducto = item.IdProducto,
-							Cantidad = item.Cantidad,
-							Precio = item.Precio,
-							Diferencia = item.Diferencia,
-							DiferenciaIdAplica = (int?)item.AplicaDiferencia,
-							DiferenciaMotivo = item.Motivo,
-							Fecha = DateTime.Now
-						};
-						context.VentasDetalles.Add(itemActual);
-					}
-					else
-					{
-						itemActual = context.VentasDetalles
-							.Single(v => v.IdVentaDetalle == item.IdVentaDetalle);
-						itemActual.IdProducto = item.IdProducto;
-						itemActual.Cantidad = item.Cantidad;
-						itemActual.Precio = item.Precio;
-						itemActual.Diferencia = item.Diferencia;
-						itemActual.DiferenciaIdAplica = (int?)item.AplicaDiferencia;
-						itemActual.DiferenciaMotivo = item.Motivo;
-						itemActual.Fecha = DateTime.Now;
-					}
-					context.SaveChanges();
-					item.IdVentaDetalle = itemActual.IdVentaDetalle;
-					item.Fecha = itemActual.Fecha;
-					RefrescarDetalle();
 
-					var header = gridMesaDetalle.Rows[idxItem].HeaderCell;
-					header.Value = "C";
-				}
-			}
-			catch
-			{
-				gridMesaDetalle.Rows[idxItem].HeaderCell.Value = "!";
-			}
-		}
+        }
 
-		private void RefrescarDetalle()
+        private void RefrescarDetalle()
 		{
 			gridMesaDetalle.Refresh();
 			var items = ((List<VentaDetalleVM>)gridMesaDetalle.DataSource);
@@ -452,13 +406,41 @@ namespace ChoppInCaja
         private void FormABM_FormClosed(object sender, FormClosedEventArgs e)
         {
             Program.ActualizarTablas();
-            this.mesas = Program.Mesas;
+            refrescarMesas();
+            GridMesas.DataSource = mesas;
+            GridMesas.Refresh();
             this.productos = Program.Productos;
+        }
+
+        private void refrescarMesas()
+        {
+            using (var context = new ChoppinEntities())
+            {
+                mesas = (from m in context.Mesas
+                        join v in context.Ventas.Where(v => v.Cierre == null)
+                        on m.IdMesa equals v.IdMesa into mv
+                        from mesaVenta in mv.DefaultIfEmpty()
+                        select new MesaVM
+                        {
+                            IdMesa = m.IdMesa,
+                            Nombre = m.Nombre,
+                            MesaVenta = mesaVenta
+                        }
+                        ).ToList();
+            }
         }
 
         private void BtnCerrarCaja_Click(object sender, EventArgs e)
         {
             new FormCaja().Show();
+        }
+
+        private void GridMesas_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            if (mesas[e.RowIndex].IdVenta > 0)
+            {
+                GridMesas.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Yellow;
+            }
         }
     }
 }
