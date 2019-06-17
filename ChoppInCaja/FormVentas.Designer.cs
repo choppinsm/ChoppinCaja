@@ -101,8 +101,11 @@
             this.gridMesaDetalle.RowTemplate.Height = 40;
             this.gridMesaDetalle.Size = new System.Drawing.Size(1185, 615);
             this.gridMesaDetalle.TabIndex = 2;
+            this.gridMesaDetalle.DataSourceChanged += new System.EventHandler(this.gridMesaDetalle_DataSourceChanged);
+            this.gridMesaDetalle.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridMesaDetalle_CellEndEdit);
             this.gridMesaDetalle.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.gridMesaDetalle_DataError);
             this.gridMesaDetalle.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.gridMesaDetalle_EditingControlShowing);
+            this.gridMesaDetalle.NewRowNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.gridMesaDetalle_NewRowNeeded);
             // 
             // statusStrip1
             // 

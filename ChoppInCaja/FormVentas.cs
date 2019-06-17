@@ -154,13 +154,13 @@ namespace ChoppInCaja
                 }
 				else
 				{
-                    RefrescarVenta(ventaAbierta.IdVenta);
+                    RefrescarVenta(ventaAbierta.IdVenta, true);
 				}
 			}
             btnAbrirCerrarMesa.Visible = true;
         }
 
-        private void RefrescarVenta(int idVenta)
+        private void RefrescarVenta(int idVenta, bool agregarItem)
 		{
 			lblEstado.Text = $"IdVenta = {idVenta}";
 			using (var context = new ChoppinEntities())
@@ -180,11 +180,16 @@ namespace ChoppInCaja
 								Fecha = item.Fecha
 							};
 				var registros = venta.ToList();
-                registros.Add(NuevoItem(idVenta));
+                if (agregarItem)
+                {
+                    registros.Add(NuevoItem(idVenta));
+                }
                 gridMesaDetalle.AutoGenerateColumns = false;
 
                 gridMesaDetalle.DataSource = registros;
 				MostrarDetalle();
+
+                var selectedRows = GridMesas.SelectedRows;
                 btnAbrirCerrarMesa.Text = "Cerrar mesa";
                 btnAbrirCerrarMesa.Tag = false;
             }
@@ -203,7 +208,7 @@ namespace ChoppInCaja
 			};
 		}
 
-		private void AgregarVenta(int idMesa)
+		private void ConsultaAbrirMesa(int idMesa)
 		{
             var confirmResult = MessageBox.Show(this, "¿Abrir la mesa?", "Confirm Delete!!", MessageBoxButtons.YesNo);
             if (confirmResult == DialogResult.Yes)
@@ -213,16 +218,53 @@ namespace ChoppInCaja
                     Apertura = DateTime.Now,
                     IdMesa = idMesa
                 };
-                using (var context = new ChoppinEntities())
-                {
-                    context.Ventas.Add(ventaAbierta);
-                    context.SaveChanges();
-                    RefrescarCboVentas();
-                    CboVentas.SelectedItem = null;
-                    CboVentas.Text = "";
-                }
-                RefrescarVenta(ventaAbierta.IdVenta);
+                AgregarVenta(ventaAbierta);
+                GridMesas.Rows[GridMesas.SelectedRows[0].Index].DefaultCellStyle.BackColor = Color.Yellow;
+            }
+        }
 
+        private void AgregarVenta(VentaDetalleVM ventaVM)
+        {
+            var venta = new Venta
+            {
+                IdMesa = ultimaIdMesaSeleccionada,
+                Apertura = ventaVM.Fecha
+            };
+            AgregarVenta(venta);
+            ventaVM.IdVenta = venta.IdVenta;
+        }
+
+        private void AgregarVenta(Venta venta)
+        {
+            using (var context = new ChoppinEntities())
+            {
+                context.Ventas.Add(venta);
+                context.SaveChanges();
+                RefrescarCboVentas();
+                CboVentas.SelectedItem = null;
+                CboVentas.Text = "";
+            }
+            RefrescarVenta(venta.IdVenta, true);
+        }
+
+        private void ActualizarVentaDetalle(VentaDetalleVM ventaVM)
+        {
+            using (var context = new ChoppinEntities())
+            {
+                var ventaDetalle = ventaVM.IdVentaDetalle > 0
+                    ? context.VentasDetalles.Single(v => v.IdVentaDetalle == ventaVM.IdVentaDetalle)
+                    : context.VentasDetalles.Add(new VentasDetalle
+                    {
+                        IdVenta = ventaVM.IdVenta,
+                        IdProducto = ventaVM.IdProducto,
+                        Cantidad = ventaVM.Cantidad,
+                        Precio = ventaVM.Precio,
+                        Diferencia = ventaVM.Diferencia,
+                        DiferenciaIdAplica = (int?)ventaVM.AplicaDiferencia,
+                        DiferenciaMotivo = ventaVM.Motivo,
+                        Fecha = DateTime.Now
+                    });
+                context.SaveChanges();
             }
         }
 
@@ -330,7 +372,10 @@ namespace ChoppInCaja
 				return;
 			var producto = productos[idxProducto];
 			var idxItem = gridMesaDetalle.SelectedCells[0].RowIndex;
-			((VentaDetalleVM)gridMesaDetalle.Rows[idxItem].DataBoundItem).Precio = producto.Precio;
+            var item = ((VentaDetalleVM)gridMesaDetalle.Rows[idxItem].DataBoundItem);
+            item.Precio = producto.Precio;
+            //var idMesa = ((List<MesaVM>)GridMesas.DataSource)[GridMesas.SelectedRows[0].Index].IdMesa;
+            //AgregarVenta(idMesa);
 		}
 
 		private void gridMesaDetalle_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -342,9 +387,13 @@ namespace ChoppInCaja
 		{
 			gridMesaDetalle.Refresh();
 			var items = ((List<VentaDetalleVM>)gridMesaDetalle.DataSource);
-			lblTotal.Text = items.Sum(i => i.Importe).ToString("C2", new CultureInfo("es-AR"));
-			lblEstado.Text = $"IdVenta:{items[0].IdVenta}, diferencia: {items.Sum(i => i.Diferencia).ToString("C2", new CultureInfo("es-AR"))}";
-		}
+            lblTotal.Text = items.Any()
+                    ? items.Sum(i => i.Importe).ToString("C2", new CultureInfo("es-AR"))
+                    : "";
+			lblEstado.Text = items.Any()
+                    ? $"IdVenta:{items[0].IdVenta}, diferencia: {items.Sum(i => i.Diferencia).ToString("C2", new CultureInfo("es-AR"))}"
+                    : "";
+        }
 
 		private void GridMesas_DataError(object sender, DataGridViewDataErrorEventArgs e)
 		{
@@ -355,7 +404,7 @@ namespace ChoppInCaja
         {
             if ((bool)btnAbrirCerrarMesa.Tag)
             {
-                AgregarVenta(ultimaIdMesaSeleccionada);
+                ConsultaAbrirMesa(ultimaIdMesaSeleccionada);
             }
             else
             {
@@ -373,7 +422,7 @@ namespace ChoppInCaja
 					IdVenta = 0
 				});
 				CboVentas.DataSource = ventas.ToList();
-				RefrescarVenta(0);
+				RefrescarVenta(0, false);
 			}
 		}
 
@@ -390,7 +439,7 @@ namespace ChoppInCaja
                     GridMesas.ClearSelection();
                     btnAbrirCerrarMesa.Visible = false;
                 }
-                RefrescarVenta(idVenta);
+                RefrescarVenta(idVenta, false);
 				MostrarDetalle();
             }
 		}
@@ -441,6 +490,31 @@ namespace ChoppInCaja
             {
                 GridMesas.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Yellow;
             }
+        }
+
+        private void gridMesaDetalle_DataSourceChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void gridMesaDetalle_NewRowNeeded(object sender, DataGridViewRowEventArgs e)
+        {
+
+        }
+
+        private void gridMesaDetalle_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            var ventaVM = ((List<VentaDetalleVM>)gridMesaDetalle.DataSource)[e.RowIndex];
+            if (ventaVM.IdVenta == 0)
+            {
+                AgregarVenta(ventaVM);
+            }
+            try
+            {
+                ActualizarVentaDetalle(ventaVM);
+                RefrescarVenta(ventaVM.IdVenta, true);
+            }
+            catch { }
         }
     }
 }

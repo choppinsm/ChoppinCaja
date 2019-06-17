@@ -35,6 +35,9 @@ namespace ChoppInCaja
 
         private void FormCaja_Shown(object sender, EventArgs e)
         {
+            LblEfectivo.Text = "Efectivo: ";
+            LblTarjeta.Text = "Tarjeta: ";
+            LblTotal.Text = "Total: ";
             using (var context = new ChoppinEntities())
             {
                 var idVentaDesdeNoInclusive = context.CajasCerradas.Max(v => v.IdVenta);
@@ -49,10 +52,11 @@ namespace ChoppInCaja
                 var efectivo = pagos.SingleOrDefault(p => p.Medio == MediosDePago.Efectivo)?.SubTotal ?? 0;
                 var tarjeta = pagos.SingleOrDefault(p => p.Medio == MediosDePago.Tarjeta)?.SubTotal ?? 0;
                 var total = efectivo + tarjeta;
-                if(total > 0)
+                if(total == 0)
                 {
                     MessageBox.Show(this, "Para cerrar la caja primero se debe cobrar algo");
                     Close();
+                    return;
                 }
                 //Controla el total de pagos sea igual al total de ventas detalle
                 var controlVentasDetalle = (from v in context.VentasDetalles
@@ -64,9 +68,9 @@ namespace ChoppInCaja
                     MessageBox.Show(this, "Para cerrar la caja todas las mesas deben estar pagas");
                     Close();
                 }
-                LblEfectivo.Text = $"Efectivo: {efectivo.ToString("C2", new CultureInfo("es-AR"))}";
-                LblTarjeta.Text = $"Tarjeta: {tarjeta.ToString("C2", new CultureInfo("es-AR"))}";
-                LblTotal.Text = $"Total: {total.ToString("C2", new CultureInfo("es-AR"))}";
+                LblEfectivo.Text += efectivo.ToString("C2", new CultureInfo("es-AR"));
+                LblTarjeta.Text += tarjeta.ToString("C2", new CultureInfo("es-AR"));
+                LblTotal.Text += total.ToString("C2", new CultureInfo("es-AR"));
                 if(total == 0)
                 {
                     BtnCerrarCaja.Visible = false;
