@@ -12,19 +12,8 @@ namespace ChoppInCaja
     using System;
     using System.Collections.Generic;
     
-    public partial class VentasDetalle
+    public partial class CajaCerrada
     {
-        public int IdVentaDetalle { get; set; }
         public int IdVenta { get; set; }
-        public int IdProducto { get; set; }
-        public int Cantidad { get; set; }
-        public decimal Precio { get; set; }
-        public decimal Diferencia { get; set; }
-        public Nullable<int> DiferenciaIdAplica { get; set; }
-        public string DiferenciaMotivo { get; set; }
-        public System.DateTime Fecha { get; set; }
-    
-        public virtual Producto Producto { get; set; }
-        public virtual Venta Venta { get; set; }
     }
 }

@@ -125,10 +125,41 @@ namespace ChoppInCaja
 
 		private void Ventas_Load(object sender, EventArgs e)
 		{
-			GridMesas.DataSource = mesas;
+            ActualizarMesas();
 		}
 
-		private int ultimaIdMesaSeleccionada = -1;
+        private void ActualizarMesas()
+        {   
+            var margen = new Size(10, 10); // Margen entre mesas
+            var location = new Point(margen);// Posicion de la mesa
+
+            foreach (var mesa in mesas)
+            {
+                var btn = new Button();
+                btn.Name = $"btnMesa{mesa.IdMesa}";
+                btn.Tag = mesa.IdMesa;
+                btn.Click += BtnMesa_Click;
+                btn.Font = new Font("Consolas", 18, FontStyle.Bold);
+                btn.Text = mesa.Nombre;
+                btn.AutoSize = true;
+                btn.Location = location;
+                btn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+                Controls.Add(btn);
+                location.X += btn.Size.Width;
+                if(location.X + margen.Width * 3 > Width)
+                {
+                    location.X = margen.Width;
+                    location.Y += margen.Height + btn.Height;
+                }
+            }
+        }
+
+        private void BtnMesa_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(this, ((Button)sender).Tag.ToString());
+        }
+
+        private int ultimaIdMesaSeleccionada = -1;
 		private List<MesaVM> mesas;
 		private List<Producto> productos;
 
@@ -253,7 +284,7 @@ namespace ChoppInCaja
             {
                 var ventaDetalle = ventaVM.IdVentaDetalle > 0
                     ? context.VentasDetalles.Single(v => v.IdVentaDetalle == ventaVM.IdVentaDetalle)
-                    : context.VentasDetalles.Add(new VentasDetalle
+                    : context.VentasDetalles.Add(new VentaDetalle
                     {
                         IdVenta = ventaVM.IdVenta,
                         IdProducto = ventaVM.IdProducto,
@@ -456,8 +487,7 @@ namespace ChoppInCaja
         {
             Program.ActualizarTablas();
             refrescarMesas();
-            GridMesas.DataSource = mesas;
-            GridMesas.Refresh();
+            ActualizarMesas();
             this.productos = Program.Productos;
         }
 

@@ -23,7 +23,7 @@ namespace ChoppInCaja
         {
             using (var context = new ChoppinEntities())
             {
-                context.CajasCerradas.Add(new CajasCerradas
+                context.CajasCerradas.Add(new CajaCerrada
                 {
                     IdVenta = context.Ventas.Max(v => v.IdVenta)
                 });

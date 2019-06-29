@@ -4,117 +4,166 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="ChoppinModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="CajasCerradas">
-          <Key>
-            <PropertyRef Name="IdVenta" />
-          </Key>
-          <Property Name="IdVenta" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Mesas">
-          <Key>
-            <PropertyRef Name="IdMesa" />
-          </Key>
-          <Property Name="IdMesa" Type="int" Nullable="false" />
-          <Property Name="Nombre" Type="nvarchar" MaxLength="50" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Pagos">
-          <Key>
-            <PropertyRef Name="IdVenta" />
-            <PropertyRef Name="IdMedioPago" />
-          </Key>
-          <Property Name="IdVenta" Type="int" Nullable="false" />
-          <Property Name="IdMedioPago" Type="int" Nullable="false" />
-          <Property Name="Importe" Type="numeric" Precision="18" Scale="4" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Productos">
-          <Key>
-            <PropertyRef Name="IdProducto" />
-          </Key>
-          <Property Name="IdProducto" Type="int" Nullable="false" />
-          <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Precio" Type="numeric" Precision="18" Scale="4" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Ventas">
-          <Key>
-            <PropertyRef Name="IdVenta" />
-          </Key>
-          <Property Name="IdVenta" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="IdMesa" Type="int" Nullable="false" />
-          <Property Name="Apertura" Type="datetime" Nullable="false" />
-          <Property Name="Cierre" Type="datetime" />
-        </EntityType>
-        <EntityType Name="VentasDetalle">
-          <Key>
-            <PropertyRef Name="IdVentaDetalle" />
-          </Key>
-          <Property Name="IdVentaDetalle" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="IdVenta" Type="int" Nullable="false" />
-          <Property Name="IdProducto" Type="int" Nullable="false" />
-          <Property Name="Cantidad" Type="int" Nullable="false" />
-          <Property Name="Precio" Type="numeric" Precision="18" Scale="4" Nullable="false" />
-          <Property Name="Diferencia" Type="numeric" Precision="18" Scale="4" Nullable="false" />
-          <Property Name="DiferenciaIdAplica" Type="int" />
-          <Property Name="DiferenciaMotivo" Type="nvarchar" MaxLength="200" />
-          <Property Name="Fecha" Type="datetime" Nullable="false" />
-        </EntityType>
-        <Association Name="FK_Ventas_Mesas">
-          <End Role="Mesas" Type="Self.Mesas" Multiplicity="1" />
-          <End Role="Ventas" Type="Self.Ventas" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Mesas">
-              <PropertyRef Name="IdMesa" />
-            </Principal>
-            <Dependent Role="Ventas">
-              <PropertyRef Name="IdMesa" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_VentasDetalle_Productos">
-          <End Role="Productos" Type="Self.Productos" Multiplicity="1" />
-          <End Role="VentasDetalle" Type="Self.VentasDetalle" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Productos">
-              <PropertyRef Name="IdProducto" />
-            </Principal>
-            <Dependent Role="VentasDetalle">
-              <PropertyRef Name="IdProducto" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_VentasDetalle_Ventas">
-          <End Role="Ventas" Type="Self.Ventas" Multiplicity="1" />
-          <End Role="VentasDetalle" Type="Self.VentasDetalle" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Ventas">
-              <PropertyRef Name="IdVenta" />
-            </Principal>
-            <Dependent Role="VentasDetalle">
-              <PropertyRef Name="IdVenta" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="ChoppinModelStoreContainer">
-          <EntitySet Name="CajasCerradas" EntityType="Self.CajasCerradas" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Mesas" EntityType="Self.Mesas" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Pagos" EntityType="Self.Pagos" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Productos" EntityType="Self.Productos" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Ventas" EntityType="Self.Ventas" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="VentasDetalle" EntityType="Self.VentasDetalle" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_Ventas_Mesas" Association="Self.FK_Ventas_Mesas">
-            <End Role="Mesas" EntitySet="Mesas" />
-            <End Role="Ventas" EntitySet="Ventas" />
-          </AssociationSet>
-          <AssociationSet Name="FK_VentasDetalle_Productos" Association="Self.FK_VentasDetalle_Productos">
-            <End Role="Productos" EntitySet="Productos" />
-            <End Role="VentasDetalle" EntitySet="VentasDetalle" />
-          </AssociationSet>
-          <AssociationSet Name="FK_VentasDetalle_Ventas" Association="Self.FK_VentasDetalle_Ventas">
-            <End Role="Ventas" EntitySet="Ventas" />
-            <End Role="VentasDetalle" EntitySet="VentasDetalle" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema></edmx:StorageModels>
+    <Schema Namespace="ChoppinModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="ChoppinModelStoreContainer">
+    <EntitySet Name="Mesas" EntityType="ChoppinModel.Store.Mesas" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Productos" EntityType="ChoppinModel.Store.Productos" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Ventas" EntityType="ChoppinModel.Store.Ventas" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="VentasDetalles" EntityType="ChoppinModel.Store.VentasDetalles" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Pagos" EntityType="ChoppinModel.Store.Pagos" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="CajasCerradas" EntityType="ChoppinModel.Store.CajasCerradas" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Categorias" EntityType="ChoppinModel.Store.Categorias" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Marcas" EntityType="ChoppinModel.Store.Marcas" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_Ventas_Mesas" Association="ChoppinModel.Store.FK_Ventas_Mesas">
+      <End Role="Mesas" EntitySet="Mesas" />
+      <End Role="Ventas" EntitySet="Ventas" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VentasDetalle_Productos" Association="ChoppinModel.Store.FK_VentasDetalle_Productos">
+      <End Role="Producto" EntitySet="Productos" />
+      <End Role="VentasDetalle" EntitySet="VentasDetalles" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VentasDetalle_Ventas" Association="ChoppinModel.Store.FK_VentasDetalle_Ventas">
+      <End Role="Venta" EntitySet="Ventas" />
+      <End Role="VentasDetalle" EntitySet="VentasDetalles" />
+    </AssociationSet>
+    <AssociationSet Name="CategoriasProducto" Association="ChoppinModel.Store.CategoriasProducto">
+      <End Role="Categorias" EntitySet="Categorias" />
+      <End Role="Producto" EntitySet="Productos" />
+    </AssociationSet>
+    <AssociationSet Name="MarcaProducto" Association="ChoppinModel.Store.MarcaProducto">
+      <End Role="Marca" EntitySet="Marcas" />
+      <End Role="Producto" EntitySet="Productos" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Mesas">
+    <Key>
+      <PropertyRef Name="IdMesa" />
+    </Key>
+    <Property Name="IdMesa" Type="int" Nullable="false" />
+    <Property Name="Nombre" Type="nvarchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Productos">
+    <Key>
+      <PropertyRef Name="IdProducto" />
+    </Key>
+    <Property Name="IdProducto" Type="int" Nullable="false" />
+    <Property Name="Nombre" Type="nvarchar" Nullable="false" MaxLength="100" />
+    <Property Name="Precio" Type="decimal" Nullable="false" Precision="18" Scale="4" />
+    <Property Name="IdCategoria" Type="int" Nullable="false" />
+    <Property Name="IdMarca" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Ventas">
+    <Key>
+      <PropertyRef Name="IdVenta" />
+    </Key>
+    <Property Name="IdVenta" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IdMesa" Type="int" Nullable="false" />
+    <Property Name="Apertura" Type="datetime" Nullable="false" />
+    <Property Name="Cierre" Type="datetime" Nullable="true" />
+  </EntityType>
+  <EntityType Name="VentasDetalles">
+    <Key>
+      <PropertyRef Name="IdVentaDetalle" />
+    </Key>
+    <Property Name="IdVentaDetalle" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IdVenta" Type="int" Nullable="false" />
+    <Property Name="IdProducto" Type="int" Nullable="false" />
+    <Property Name="Cantidad" Type="int" Nullable="false" />
+    <Property Name="Precio" Type="decimal" Nullable="false" Precision="18" Scale="4" />
+    <Property Name="Diferencia" Type="decimal" Nullable="false" Precision="18" Scale="4" />
+    <Property Name="DiferenciaIdAplica" Type="int" Nullable="true" />
+    <Property Name="DiferenciaMotivo" Type="nvarchar" Nullable="true" MaxLength="200" />
+    <Property Name="Fecha" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Pagos">
+    <Key>
+      <PropertyRef Name="IdVenta" />
+      <PropertyRef Name="IdMedioPago" />
+    </Key>
+    <Property Name="IdVenta" Type="int" Nullable="false" />
+    <Property Name="IdMedioPago" Type="int" Nullable="false" />
+    <Property Name="Importe" Type="decimal" Nullable="false" Precision="18" Scale="4" />
+  </EntityType>
+  <EntityType Name="CajasCerradas">
+    <Key>
+      <PropertyRef Name="IdVenta" />
+    </Key>
+    <Property Name="IdVenta" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Categorias">
+    <Key>
+      <PropertyRef Name="IdCategoria" />
+    </Key>
+    <Property Name="IdCategoria" Type="int" Nullable="false" />
+    <Property Name="Nombre" Type="nvarchar" Nullable="false" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="Marcas">
+    <Key>
+      <PropertyRef Name="IdMarca" />
+    </Key>
+    <Property Name="IdMarca" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Ventas_Mesas">
+    <End Role="Mesas" Type="ChoppinModel.Store.Mesas" Multiplicity="1" />
+    <End Role="Ventas" Type="ChoppinModel.Store.Ventas" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Mesas">
+        <PropertyRef Name="IdMesa" />
+      </Principal>
+      <Dependent Role="Ventas">
+        <PropertyRef Name="IdMesa" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VentasDetalle_Productos">
+    <End Role="Producto" Type="ChoppinModel.Store.Productos" Multiplicity="1" />
+    <End Role="VentasDetalle" Type="ChoppinModel.Store.VentasDetalles" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Producto">
+        <PropertyRef Name="IdProducto" />
+      </Principal>
+      <Dependent Role="VentasDetalle">
+        <PropertyRef Name="IdProducto" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VentasDetalle_Ventas">
+    <End Role="Venta" Type="ChoppinModel.Store.Ventas" Multiplicity="1" />
+    <End Role="VentasDetalle" Type="ChoppinModel.Store.VentasDetalles" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Venta">
+        <PropertyRef Name="IdVenta" />
+      </Principal>
+      <Dependent Role="VentasDetalle">
+        <PropertyRef Name="IdVenta" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CategoriasProducto">
+    <End Role="Categorias" Type="ChoppinModel.Store.Categorias" Multiplicity="1" />
+    <End Role="Producto" Type="ChoppinModel.Store.Productos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Categorias">
+        <PropertyRef Name="IdCategoria" />
+      </Principal>
+      <Dependent Role="Producto">
+        <PropertyRef Name="IdCategoria" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MarcaProducto">
+    <End Role="Marca" Type="ChoppinModel.Store.Marcas" Multiplicity="1" />
+    <End Role="Producto" Type="ChoppinModel.Store.Productos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Marca">
+        <PropertyRef Name="IdMarca" />
+      </Principal>
+      <Dependent Role="Producto">
+        <PropertyRef Name="IdMarca" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ChoppinModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -134,6 +183,10 @@
           <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Precio" Type="Decimal" Precision="18" Scale="4" Nullable="false" />
           <NavigationProperty Name="VentasDetalles" Relationship="ChoppinModel.FK_VentasDetalle_Productos" FromRole="Producto" ToRole="VentasDetalle" />
+          <NavigationProperty Name="Categorias" Relationship="ChoppinModel.CategoriasProducto" FromRole="Producto" ToRole="Categorias" />
+          <Property Name="IdCategoria" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Marca" Relationship="ChoppinModel.MarcaProducto" FromRole="Producto" ToRole="Marca" />
+          <Property Name="IdMarca" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Venta">
           <Key>
@@ -166,7 +219,7 @@
             <End Role="Mesas" EntitySet="Mesas" />
             <End Role="Ventas" EntitySet="Ventas" />
           </AssociationSet>
-          <EntitySet Name="VentasDetalles" EntityType="ChoppinModel.VentasDetalle" />
+          <EntitySet Name="VentasDetalles" EntityType="ChoppinModel.VentaDetalle" />
           <AssociationSet Name="FK_VentasDetalle_Productos" Association="ChoppinModel.FK_VentasDetalle_Productos">
             <End Role="Producto" EntitySet="Productos" />
             <End Role="VentasDetalle" EntitySet="VentasDetalles" />
@@ -176,9 +229,19 @@
             <End Role="VentasDetalle" EntitySet="VentasDetalles" />
           </AssociationSet>
           <EntitySet Name="Pagos" EntityType="ChoppinModel.Pago" />
-          <EntitySet Name="CajasCerradas" EntityType="ChoppinModel.CajasCerradas" />
+          <EntitySet Name="CajasCerradas" EntityType="ChoppinModel.CajaCerrada" />
+          <EntitySet Name="Categorias" EntityType="ChoppinModel.Categoria" />
+          <AssociationSet Name="CategoriasProducto" Association="ChoppinModel.CategoriasProducto">
+            <End Role="Categorias" EntitySet="Categorias" />
+            <End Role="Producto" EntitySet="Productos" />
+          </AssociationSet>
+          <EntitySet Name="Marcas" EntityType="ChoppinModel.Marca" />
+          <AssociationSet Name="MarcaProducto" Association="ChoppinModel.MarcaProducto">
+            <End Role="Marca" EntitySet="Marcas" />
+            <End Role="Producto" EntitySet="Productos" />
+          </AssociationSet>
           </EntityContainer>
-        <EntityType Name="VentasDetalle">
+        <EntityType Name="VentaDetalle">
           <Key>
             <PropertyRef Name="IdVentaDetalle" />
           </Key>
@@ -196,7 +259,7 @@
         </EntityType>
         <Association Name="FK_VentasDetalle_Productos">
           <End Type="ChoppinModel.Producto" Role="Producto" Multiplicity="1" />
-          <End Type="ChoppinModel.VentasDetalle" Role="VentasDetalle" Multiplicity="*" />
+          <End Type="ChoppinModel.VentaDetalle" Role="VentasDetalle" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Producto">
               <PropertyRef Name="IdProducto" />
@@ -208,7 +271,7 @@
         </Association>
         <Association Name="FK_VentasDetalle_Ventas">
           <End Type="ChoppinModel.Venta" Role="Venta" Multiplicity="1" />
-          <End Type="ChoppinModel.VentasDetalle" Role="VentasDetalle" Multiplicity="*" />
+          <End Type="ChoppinModel.VentaDetalle" Role="VentasDetalle" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Venta">
               <PropertyRef Name="IdVenta" />
@@ -227,79 +290,134 @@
           <Property Name="IdMedioPago" Type="Int32" Nullable="false" />
           <Property Name="Importe" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
         </EntityType>
-        <EntityType Name="CajasCerradas">
+        <EntityType Name="CajaCerrada">
           <Key>
             <PropertyRef Name="IdVenta" />
           </Key>
           <Property Name="IdVenta" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="Categoria">
+          <Key>
+            <PropertyRef Name="IdCategoria" />
+          </Key>
+          <Property Name="IdCategoria" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="200" />
+          <NavigationProperty Name="Producto" Relationship="ChoppinModel.CategoriasProducto" FromRole="Categorias" ToRole="Producto" />
+        </EntityType>
+        <Association Name="CategoriasProducto">
+          <End Type="ChoppinModel.Categoria" Role="Categorias" Multiplicity="1" />
+          <End Type="ChoppinModel.Producto" Role="Producto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categorias">
+              <PropertyRef Name="IdCategoria" />
+            </Principal>
+            <Dependent Role="Producto">
+              <PropertyRef Name="IdCategoria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Marca">
+          <Key>
+            <PropertyRef Name="IdMarca" />
+          </Key>
+          <Property Name="IdMarca" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <NavigationProperty Name="Producto" Relationship="ChoppinModel.MarcaProducto" FromRole="Marca" ToRole="Producto" />
+        </EntityType>
+        <Association Name="MarcaProducto">
+          <End Type="ChoppinModel.Marca" Role="Marca" Multiplicity="1" />
+          <End Type="ChoppinModel.Producto" Role="Producto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Marca">
+              <PropertyRef Name="IdMarca" />
+            </Principal>
+            <Dependent Role="Producto">
+              <PropertyRef Name="IdMarca" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
-      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="ChoppinModelStoreContainer" CdmEntityContainer="ChoppinEntities">
-          <EntitySetMapping Name="Mesas">
-            <EntityTypeMapping TypeName="ChoppinModel.Mesa">
-              <MappingFragment StoreEntitySet="Mesas">
-                <ScalarProperty Name="IdMesa" ColumnName="IdMesa" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Productos">
-            <EntityTypeMapping TypeName="ChoppinModel.Producto">
-              <MappingFragment StoreEntitySet="Productos">
-                <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="Precio" ColumnName="Precio" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Ventas">
-            <EntityTypeMapping TypeName="ChoppinModel.Venta">
-              <MappingFragment StoreEntitySet="Ventas">
-                <ScalarProperty Name="IdVenta" ColumnName="IdVenta" />
-                <ScalarProperty Name="IdMesa" ColumnName="IdMesa" />
-                <ScalarProperty Name="Apertura" ColumnName="Apertura" />
-                <ScalarProperty Name="Cierre" ColumnName="Cierre" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="VentasDetalles">
-            <EntityTypeMapping TypeName="ChoppinModel.VentasDetalle">
-              <MappingFragment StoreEntitySet="VentasDetalle">
-                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-                <ScalarProperty Name="DiferenciaMotivo" ColumnName="DiferenciaMotivo" />
-                <ScalarProperty Name="DiferenciaIdAplica" ColumnName="DiferenciaIdAplica" />
-                <ScalarProperty Name="Diferencia" ColumnName="Diferencia" />
-                <ScalarProperty Name="Precio" ColumnName="Precio" />
-                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
-                <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
-                <ScalarProperty Name="IdVenta" ColumnName="IdVenta" />
-                <ScalarProperty Name="IdVentaDetalle" ColumnName="IdVentaDetalle" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Pagos">
-            <EntityTypeMapping TypeName="ChoppinModel.Pago">
-              <MappingFragment StoreEntitySet="Pagos">
-                <ScalarProperty Name="Importe" ColumnName="Importe" />
-                <ScalarProperty Name="IdMedioPago" ColumnName="IdMedioPago" />
-                <ScalarProperty Name="IdVenta" ColumnName="IdVenta" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="CajasCerradas">
-            <EntityTypeMapping TypeName="ChoppinModel.CajasCerradas">
-              <MappingFragment StoreEntitySet="CajasCerradas">
-                <ScalarProperty Name="IdVenta" ColumnName="IdVenta" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-        </EntityContainerMapping>
-      </Mapping>
-    </edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ChoppinModelStoreContainer" CdmEntityContainer="ChoppinEntities">
+    <EntitySetMapping Name="Mesas">
+      <EntityTypeMapping TypeName="IsTypeOf(ChoppinModel.Mesa)">
+        <MappingFragment StoreEntitySet="Mesas">
+          <ScalarProperty Name="IdMesa" ColumnName="IdMesa" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Productos">
+      <EntityTypeMapping TypeName="IsTypeOf(ChoppinModel.Producto)">
+        <MappingFragment StoreEntitySet="Productos">
+          <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="Precio" ColumnName="Precio" />
+          <ScalarProperty Name="IdCategoria" ColumnName="IdCategoria" />
+          <ScalarProperty Name="IdMarca" ColumnName="IdMarca" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Ventas">
+      <EntityTypeMapping TypeName="IsTypeOf(ChoppinModel.Venta)">
+        <MappingFragment StoreEntitySet="Ventas">
+          <ScalarProperty Name="IdVenta" ColumnName="IdVenta" />
+          <ScalarProperty Name="IdMesa" ColumnName="IdMesa" />
+          <ScalarProperty Name="Apertura" ColumnName="Apertura" />
+          <ScalarProperty Name="Cierre" ColumnName="Cierre" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VentasDetalles">
+      <EntityTypeMapping TypeName="IsTypeOf(ChoppinModel.VentaDetalle)">
+        <MappingFragment StoreEntitySet="VentasDetalles">
+          <ScalarProperty Name="IdVentaDetalle" ColumnName="IdVentaDetalle" />
+          <ScalarProperty Name="IdVenta" ColumnName="IdVenta" />
+          <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
+          <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+          <ScalarProperty Name="Precio" ColumnName="Precio" />
+          <ScalarProperty Name="Diferencia" ColumnName="Diferencia" />
+          <ScalarProperty Name="DiferenciaIdAplica" ColumnName="DiferenciaIdAplica" />
+          <ScalarProperty Name="DiferenciaMotivo" ColumnName="DiferenciaMotivo" />
+          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Pagos">
+      <EntityTypeMapping TypeName="IsTypeOf(ChoppinModel.Pago)">
+        <MappingFragment StoreEntitySet="Pagos">
+          <ScalarProperty Name="IdVenta" ColumnName="IdVenta" />
+          <ScalarProperty Name="IdMedioPago" ColumnName="IdMedioPago" />
+          <ScalarProperty Name="Importe" ColumnName="Importe" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CajasCerradas">
+      <EntityTypeMapping TypeName="IsTypeOf(ChoppinModel.CajaCerrada)">
+        <MappingFragment StoreEntitySet="CajasCerradas">
+          <ScalarProperty Name="IdVenta" ColumnName="IdVenta" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Categorias">
+      <EntityTypeMapping TypeName="IsTypeOf(ChoppinModel.Categoria)">
+        <MappingFragment StoreEntitySet="Categorias">
+          <ScalarProperty Name="IdCategoria" ColumnName="IdCategoria" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Marcas">
+      <EntityTypeMapping TypeName="IsTypeOf(ChoppinModel.Marca)">
+        <MappingFragment StoreEntitySet="Marcas">
+          <ScalarProperty Name="IdMarca" ColumnName="IdMarca" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
   <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
@@ -313,7 +431,7 @@
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="False" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
-        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
     </Options>

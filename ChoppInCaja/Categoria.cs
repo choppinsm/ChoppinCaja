@@ -12,23 +12,18 @@ namespace ChoppInCaja
     using System;
     using System.Collections.Generic;
     
-    public partial class Producto
+    public partial class Categoria
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Producto()
+        public Categoria()
         {
-            this.VentasDetalles = new HashSet<VentaDetalle>();
+            this.Producto = new HashSet<Producto>();
         }
     
-        public int IdProducto { get; set; }
-        public string Nombre { get; set; }
-        public decimal Precio { get; set; }
         public int IdCategoria { get; set; }
-        public int IdMarca { get; set; }
+        public string Nombre { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<VentaDetalle> VentasDetalles { get; set; }
-        public virtual Categoria Categorias { get; set; }
-        public virtual Marca Marca { get; set; }
+        public virtual ICollection<Producto> Producto { get; set; }
     }
 }

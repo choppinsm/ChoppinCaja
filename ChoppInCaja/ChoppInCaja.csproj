@@ -12,6 +12,23 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>C:\temporal\publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,6 +49,18 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>CC38A85C8E6141E1ECC9F765297BD45CA3B692CC</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>ChoppInCaja_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -49,7 +78,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CajasCerradas.cs">
+    <Compile Include="CajaCerrada.cs">
+      <DependentUpon>ChoppinModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Categoria.cs">
       <DependentUpon>ChoppinModel.tt</DependentUpon>
     </Compile>
     <Compile Include="FormABM.cs">
@@ -85,13 +117,13 @@
     <Compile Include="FormPago.Designer.cs">
       <DependentUpon>FormPago.cs</DependentUpon>
     </Compile>
+    <Compile Include="Marca.cs">
+      <DependentUpon>ChoppinModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Mesa.cs">
       <DependentUpon>ChoppinModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Pago.cs">
-      <DependentUpon>ChoppinModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Producto.cs">
       <DependentUpon>ChoppinModel.tt</DependentUpon>
     </Compile>
     <Compile Include="FormSplash.cs">
@@ -111,12 +143,15 @@
     <Compile Include="Model\Equipo.cs" />
     <Compile Include="Model\_VentaVM.cs" />
     <Compile Include="Model\VentaDetalleVM.cs" />
+    <Compile Include="Producto.cs">
+      <DependentUpon>ChoppinModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Venta.cs">
       <DependentUpon>ChoppinModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VentasDetalle.cs">
+    <Compile Include="VentaDetalle.cs">
       <DependentUpon>ChoppinModel.tt</DependentUpon>
     </Compile>
     <EmbeddedResource Include="FormABM.resx">
@@ -138,6 +173,7 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>ChoppinModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="ChoppInCaja_TemporaryKey.pfx" />
     <None Include="ChoppinModel.edmx.diagram">
       <DependentUpon>ChoppinModel.edmx</DependentUpon>
     </None>
@@ -146,11 +182,19 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\choppin-db.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\choppin-db_log.ldf">
+      <DependentUpon>choppin-db.mdf</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ChoppinModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ChoppinModel.Context.cs</LastGenOutput>
       <DependentUpon>ChoppinModel.edmx</DependentUpon>
     </Content>
+    <Content Include="ChoppinModel.edmx.sql" />
     <Content Include="ChoppinModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>ChoppinModel.edmx</DependentUpon>
@@ -164,6 +208,18 @@
     <PackageReference Include="EntityFramework">
       <Version>6.2.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

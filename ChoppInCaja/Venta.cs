@@ -17,7 +17,7 @@ namespace ChoppInCaja
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Venta()
         {
-            this.VentasDetalles = new HashSet<VentasDetalle>();
+            this.VentasDetalles = new HashSet<VentaDetalle>();
         }
     
         public int IdVenta { get; set; }
@@ -27,6 +27,6 @@ namespace ChoppInCaja
     
         public virtual Mesa Mesa { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<VentasDetalle> VentasDetalles { get; set; }
+        public virtual ICollection<VentaDetalle> VentasDetalles { get; set; }
     }
 }
