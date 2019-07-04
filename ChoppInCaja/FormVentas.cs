@@ -17,33 +17,12 @@ namespace ChoppInCaja
             this.productos = productos;
 			InitializeComponent();
 
-			CboVentas.ValueMember = "IdVenta";
-			CboVentas.DisplayMember = "IdVenta";
-			RefrescarCboVentas();
-			CboVentas.SelectedItem = null;
-			CboVentas.Text = "";
+            this.BackColor = Estilo.Instance.ColorVentas;
 
-			GridMesas.AutoGenerateColumns = false;
-			var columns = GridMesas.Columns;
-			var column = new DataGridViewTextBoxColumn();
-			column.HeaderText = column.Name = "Id";
-			column.DataPropertyName = "IdMesa";
-			column.ReadOnly = true;
-			column.Width = 50;
-            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            columns.Add(column);
-			column = new DataGridViewTextBoxColumn();
-			column.HeaderText = column.Name = "Mesa";
-			column.DataPropertyName = "Nombre";
-			column.ReadOnly = true;
-			column.Width = 150;
-            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            columns.Add(column);
-
-			gridMesaDetalle.AutoGenerateColumns = false;
+            gridMesaDetalle.AutoGenerateColumns = false;
 			gridMesaDetalle.EnableHeadersVisualStyles = false;
-			columns = gridMesaDetalle.Columns;
-			column = new DataGridViewTextBoxColumn();
+			var columns = gridMesaDetalle.Columns;
+			var column = new DataGridViewTextBoxColumn();
 			column.HeaderText = column.Name = "Id";
 			column.DataPropertyName = "IdVentaDetalle";
 			column.ReadOnly = true;
@@ -125,75 +104,89 @@ namespace ChoppInCaja
 
 		private void Ventas_Load(object sender, EventArgs e)
 		{
-            ActualizarMesas();
+            AcomodarControles();
 		}
 
-        private void ActualizarMesas()
+        private void AcomodarControles()
         {   
-            var margen = new Size(10, 10); // Margen entre mesas
+            var margen = new Size(5, 10); // Margen entre mesas
             var location = new Point(margen);// Posicion de la mesa
-
+            Action<Control> SetLocation = (Control control) =>
+                {
+                    if (location.X + margen.Width + control.Size.Width > Width)
+                    {
+                        location.X = margen.Width;
+                        location.Y += margen.Height + control.Height;
+                    }
+                    control.Location = location;
+                    location.X += control.Size.Width + margen.Width;
+                };
             foreach (var mesa in mesas)
             {
                 var btn = new Button();
                 btn.Name = $"btnMesa{mesa.IdMesa}";
                 btn.Tag = mesa.IdMesa;
                 btn.Click += BtnMesa_Click;
-                btn.Font = new Font("Consolas", 18, FontStyle.Bold);
+                btn.Font = new Font("Consolas", 14, FontStyle.Bold);
                 btn.Text = mesa.Nombre;
                 btn.AutoSize = true;
-                btn.Location = location;
                 btn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+                btn.FlatStyle = FlatStyle.Flat;
+
                 Controls.Add(btn);
-                location.X += btn.Size.Width;
-                if(location.X + margen.Width * 3 > Width)
-                {
-                    location.X = margen.Width;
-                    location.Y += margen.Height + btn.Height;
-                }
+                SetLocation(btn);
+            }
+            SetLocation(BtnAbrirCerrarMesa);
+            SetLocation(BtnCerrarCaja);
+            SetLocation(BtnABM);
+
+            location.X = Width;
+            SetLocation(TxtBusqueda);
+            location.X = Width;
+            SetLocation(LstProductos);
+            LstProductos.Height = gridMesaDetalle.Top - margen.Height - LstProductos.Top;
+
+            BtnAbrirCerrarMesa.BackColor = Estilo.Instance.ColorAbrirCerrarMesa;
+            BtnCerrarCaja.BackColor = Estilo.Instance.ColorCerrarCaja;
+            BtnABM.BackColor = Estilo.Instance.ColorABM;
+            LblTotal.ForeColor = Estilo.Instance.ColorTotal;
+            LblEstado.ForeColor = Estilo.Instance.ColorEstado;
+            StatusBar.BackColor = Estilo.Instance.ColorBarraEstado;
+
+            ActualizarMesas();
+        }
+        
+
+        private void ActualizarMesas()
+        {
+            foreach (var mesa in mesas)
+            {
+                var btnMesa = (Button)Controls.Cast<Control>()
+                    .Single(c => c.Name.StartsWith("btnMesa") && (int)c.Tag == mesa.IdMesa);
+
+                btnMesa.BackColor =
+                ultimaIdMesaSeleccionada == mesa.IdMesa
+                    ? Estilo.Instance.ColorMesaActiva
+                    : mesa.IdVenta > 0
+                        ? Estilo.Instance.ColorMesaAbierta
+                        : Estilo.Instance.ColorMesaCerrada;
             }
         }
 
         private void BtnMesa_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(this, ((Button)sender).Tag.ToString());
+            var btnMesa = ((Button)sender);
+            ultimaIdMesaSeleccionada = (int)btnMesa.Tag;
+            ActualizarMesas();
         }
 
         private int ultimaIdMesaSeleccionada = -1;
 		private List<MesaVM> mesas;
 		private List<Producto> productos;
 
-		private void GridMesas_RowEnter(object sender, DataGridViewCellEventArgs e)
-		{
-			var mesa = (MesaVM)GridMesas.Rows[e.RowIndex].DataBoundItem;
-			if (mesa.IdMesa == ultimaIdMesaSeleccionada)
-			{
-				return;
-			}
-            ultimaIdMesaSeleccionada = mesa.IdMesa;
-			using (var context = new ChoppinEntities())
-			{
-				var ventaAbierta = (from venta in context.Ventas
-									where venta.IdMesa == mesa.IdMesa && venta.Cierre == null
-									select venta
-								   ).FirstOrDefault();
-				if (ventaAbierta == null)
-				{
-                    btnAbrirCerrarMesa.Text = "Abrir mesa";
-                    btnAbrirCerrarMesa.Tag = true;
-                    OcultarDetalle();
-                }
-				else
-				{
-                    RefrescarVenta(ventaAbierta.IdVenta, true);
-				}
-			}
-            btnAbrirCerrarMesa.Visible = true;
-        }
-
         private void RefrescarVenta(int idVenta, bool agregarItem)
 		{
-			lblEstado.Text = $"IdVenta = {idVenta}";
+			LblEstado.Text = $"IdVenta = {idVenta}";
 			using (var context = new ChoppinEntities())
 			{
 				var venta = from item in context.VentasDetalles
@@ -219,10 +212,9 @@ namespace ChoppInCaja
 
                 gridMesaDetalle.DataSource = registros;
 				MostrarDetalle();
-
-                var selectedRows = GridMesas.SelectedRows;
-                btnAbrirCerrarMesa.Text = "Cerrar mesa";
-                btnAbrirCerrarMesa.Tag = false;
+                
+                BtnAbrirCerrarMesa.Text = "Cerrar mesa";
+                BtnAbrirCerrarMesa.Tag = false;
             }
         }
 
@@ -250,7 +242,7 @@ namespace ChoppInCaja
                     IdMesa = idMesa
                 };
                 AgregarVenta(ventaAbierta);
-                GridMesas.Rows[GridMesas.SelectedRows[0].Index].DefaultCellStyle.BackColor = Color.Yellow;
+                //GridMesas.Rows[GridMesas.SelectedRows[0].Index].DefaultCellStyle.BackColor = Color.Yellow;
             }
         }
 
@@ -271,9 +263,6 @@ namespace ChoppInCaja
             {
                 context.Ventas.Add(venta);
                 context.SaveChanges();
-                RefrescarCboVentas();
-                CboVentas.SelectedItem = null;
-                CboVentas.Text = "";
             }
             RefrescarVenta(venta.IdVenta, true);
         }
@@ -345,10 +334,8 @@ namespace ChoppInCaja
                             });
                         }
                         context.SaveChanges();
-                        RefrescarCboVentas();
                         OcultarDetalle();
-                        GridMesas.ClearSelection();
-                        btnAbrirCerrarMesa.Visible = false;
+                        BtnAbrirCerrarMesa.Visible = false;
                         ultimaIdMesaSeleccionada = -1;
                         context.Database.CurrentTransaction.Commit();
                     }
@@ -362,8 +349,8 @@ namespace ChoppInCaja
         private void OcultarDetalle()
 		{
 			gridMesaDetalle.Hide();
-			lblEstado.Text = "";
-			lblTotal.Text = "$";
+			LblEstado.Text = "";
+            LblTotal.Text = "$";
 		}
 
 		private void MostrarDetalle()
@@ -418,10 +405,10 @@ namespace ChoppInCaja
 		{
 			gridMesaDetalle.Refresh();
 			var items = ((List<VentaDetalleVM>)gridMesaDetalle.DataSource);
-            lblTotal.Text = items.Any()
+            LblTotal.Text = items.Any()
                     ? items.Sum(i => i.Importe).ToString("C2", new CultureInfo("es-AR"))
                     : "";
-			lblEstado.Text = items.Any()
+			LblEstado.Text = items.Any()
                     ? $"IdVenta:{items[0].IdVenta}, diferencia: {items.Sum(i => i.Diferencia).ToString("C2", new CultureInfo("es-AR"))}"
                     : "";
         }
@@ -433,7 +420,7 @@ namespace ChoppInCaja
 
 		private void btnAbrirCerrarMesa_Click(object sender, EventArgs e)
         {
-            if ((bool)btnAbrirCerrarMesa.Tag)
+            if ((bool)BtnAbrirCerrarMesa.Tag)
             {
                 ConsultaAbrirMesa(ultimaIdMesaSeleccionada);
             }
@@ -443,38 +430,6 @@ namespace ChoppInCaja
             }
         }
         
-        private void RefrescarCboVentas()
-		{
-            using (var context = new ChoppinEntities())
-			{
-				var ventas = context.Ventas.ToList();
-				ventas.Insert(0, new Venta
-				{
-					IdVenta = 0
-				});
-				CboVentas.DataSource = ventas.ToList();
-				RefrescarVenta(0, false);
-			}
-		}
-
-		private void CboVentas_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			if (CboVentas.SelectedItem != null)
-			{
-                btnAbrirCerrarMesa.Visible = false;
-                var venta = (Venta)CboVentas.SelectedItem;
-                var idVenta = venta.IdVenta;
-                if(venta.Cierre != null)
-                {
-                    ultimaIdMesaSeleccionada = -1;
-                    GridMesas.ClearSelection();
-                    btnAbrirCerrarMesa.Visible = false;
-                }
-                RefrescarVenta(idVenta, false);
-				MostrarDetalle();
-            }
-		}
-
         private void BtnABM_Click(object sender, EventArgs e)
         {
             Program.ActualizarTablas();
@@ -487,7 +442,7 @@ namespace ChoppInCaja
         {
             Program.ActualizarTablas();
             refrescarMesas();
-            ActualizarMesas();
+            AcomodarControles();
             this.productos = Program.Productos;
         }
 
@@ -512,14 +467,6 @@ namespace ChoppInCaja
         private void BtnCerrarCaja_Click(object sender, EventArgs e)
         {
             new FormCaja().Show();
-        }
-
-        private void GridMesas_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
-        {
-            if (mesas[e.RowIndex].IdVenta > 0)
-            {
-                GridMesas.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Yellow;
-            }
         }
 
         private void gridMesaDetalle_DataSourceChanged(object sender, EventArgs e)
@@ -548,3 +495,33 @@ namespace ChoppInCaja
         }
     }
 }
+
+/*
+private void GridMesas_RowEnter(object sender, DataGridViewCellEventArgs e)
+{
+    var mesa = (MesaVM)GridMesas.Rows[e.RowIndex].DataBoundItem;
+    if (mesa.IdMesa == ultimaIdMesaSeleccionada)
+    {
+        return;
+    }
+    ultimaIdMesaSeleccionada = mesa.IdMesa;
+    using (var context = new ChoppinEntities())
+    {
+        var ventaAbierta = (from venta in context.Ventas
+                            where venta.IdMesa == mesa.IdMesa && venta.Cierre == null
+                            select venta
+                           ).FirstOrDefault();
+        if (ventaAbierta == null)
+        {
+            btnAbrirCerrarMesa.Text = "Abrir mesa";
+            btnAbrirCerrarMesa.Tag = true;
+            OcultarDetalle();
+        }
+        else
+        {
+            RefrescarVenta(ventaAbierta.IdVenta, true);
+        }
+    }
+    btnAbrirCerrarMesa.Visible = true;
+}
+*/

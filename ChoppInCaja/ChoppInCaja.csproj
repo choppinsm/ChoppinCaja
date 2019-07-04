@@ -64,6 +64,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -84,6 +85,7 @@
     <Compile Include="Categoria.cs">
       <DependentUpon>ChoppinModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Estilo.cs" />
     <Compile Include="FormABM.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -182,11 +184,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\choppin-db.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\choppin-db_log.ldf">
-      <DependentUpon>choppin-db.mdf</DependentUpon>
+    <Content Include="App_Data\choppin.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ChoppinModel.Context.tt">
@@ -199,6 +197,10 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>ChoppinModel.edmx</DependentUpon>
       <LastGenOutput>ChoppinModel.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Data\choppin_log.ldf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DependentUpon>choppin.mdf</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>
