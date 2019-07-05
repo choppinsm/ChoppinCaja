@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -107,20 +108,21 @@ namespace ChoppInCaja
             AcomodarControles();
 		}
 
+        private void SetLocation(Control control, ref Point location, Size margen)
+        {
+            if (location.X + margen.Width + control.Size.Width > Width)
+            {
+                location.X = margen.Width;
+                location.Y += margen.Height + control.Height;
+            }
+            control.Location = location;
+            location.X += control.Size.Width + margen.Width;
+        }
+
         private void AcomodarControles()
         {   
-            var margen = new Size(5, 10); // Margen entre mesas
+            var margen = new Size(Estilo.Instance.MargenMesaAncho, Estilo.Instance.MargenMesaAlto);
             var location = new Point(margen);// Posicion de la mesa
-            Action<Control> SetLocation = (Control control) =>
-                {
-                    if (location.X + margen.Width + control.Size.Width > Width)
-                    {
-                        location.X = margen.Width;
-                        location.Y += margen.Height + control.Height;
-                    }
-                    control.Location = location;
-                    location.X += control.Size.Width + margen.Width;
-                };
             foreach (var mesa in mesas)
             {
                 var btn = new Button();
@@ -134,18 +136,18 @@ namespace ChoppInCaja
                 btn.FlatStyle = FlatStyle.Flat;
 
                 Controls.Add(btn);
-                SetLocation(btn);
+                SetLocation(btn, ref location, margen);
             }
-            SetLocation(BtnAbrirCerrarMesa);
-            SetLocation(BtnCerrarCaja);
-            SetLocation(BtnABM);
+            SetLocation(BtnAbrirCerrarMesa, ref location, margen);
+            SetLocation(BtnCerrarCaja, ref location, margen);
+            SetLocation(BtnABM, ref location, margen);
 
             location.X = Width;
-            SetLocation(TxtBusqueda);
-            location.X = Width;
-            SetLocation(LstProductos);
+            SetLocation(TxtBusqueda, ref location, margen);
+            location.Y += margen.Height + TxtBusqueda.Height;
+            location.X = margen.Width;
+            SetLocation(LstProductos, ref location, margen);
             LstProductos.Height = gridMesaDetalle.Top - margen.Height - LstProductos.Top;
-
             BtnAbrirCerrarMesa.BackColor = Estilo.Instance.ColorAbrirCerrarMesa;
             BtnCerrarCaja.BackColor = Estilo.Instance.ColorCerrarCaja;
             BtnABM.BackColor = Estilo.Instance.ColorABM;
@@ -153,9 +155,55 @@ namespace ChoppInCaja
             LblEstado.ForeColor = Estilo.Instance.ColorEstado;
             StatusBar.BackColor = Estilo.Instance.ColorBarraEstado;
 
+            LstProductos.VerticalScroll.Enabled = true;
+            LstProductos.HorizontalScroll.Enabled = false;
+            LstProductos.AutoScroll = true;
+            CrearProductos();
+            ActualizarProductos();
             ActualizarMesas();
         }
-        
+
+        private void CrearProductos()
+        {
+            foreach (var producto in productos)
+            {
+                var imgProducto = new PictureBox();
+                imgProducto.BackColor = Estilo.Instance.ColorProductoFondo;
+                var rutaImagen = $@"{Application.StartupPath}\Imagenes\Productos\{producto.IdProducto}.jpeg";
+                imgProducto.Paint += ImgProducto_Paint;
+                if (File.Exists(rutaImagen))
+                {
+                    imgProducto.ImageLocation = rutaImagen;
+                }
+                imgProducto.Width = Estilo.Instance.ProductoAncho;
+                imgProducto.Height = Estilo.Instance.ProductoAlto;
+                imgProducto.SizeMode = PictureBoxSizeMode.Zoom;
+                LstProductos.Controls.Add(imgProducto);
+            }
+        }
+
+        private void ImgProducto_Paint(object sender, PaintEventArgs e)
+        {
+            var imgProducto = (PictureBox)sender;
+            if (imgProducto.Image == null && (imgProducto.ImageLocation?.Length ?? 0) == 0)
+            {
+                e.Graphics.Clear(Color.Black);
+                using (Font myFont = new Font(Estilo.Instance.FuenteProductoLetra, Estilo.Instance.TamañoProductoLetra))
+                {
+                    e.Graphics.DrawString($"producto.Nombre", myFont, Estilo.Instance.ColorProductoLetra, new Point(10, 10));
+                }
+            }
+        }
+
+        private void ActualizarProductos()
+        {
+            var margen = new Size(Estilo.Instance.MargenProductoAncho, Estilo.Instance.MargenProductoAlto);
+            var location = new Point(margen);// Posicion del producto
+            foreach (Control imgProducto in LstProductos.Controls)
+            {
+                SetLocation(imgProducto, ref location, margen);
+            }
+        }
 
         private void ActualizarMesas()
         {

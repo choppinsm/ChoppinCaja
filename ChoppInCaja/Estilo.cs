@@ -32,7 +32,17 @@ namespace ChoppInCaja
         public Color ColorTotal => FromAppSetting("ColorTotal");
         public Color ColorEstado => FromAppSetting("ColorEstado");
         public Color ColorBarraEstado => FromAppSetting("ColorBarraEstado");
-        
+        public Color ColorProductoFondo => FromAppSetting("ColorProductoFondo");
+        public Brush ColorProductoLetra => FromAppSetting<Brush>("ColorProductoLetra");
+        public int TamañoProductoLetra => FromAppSetting<int>("TamañoProductoLetra");
+        public string FuenteProductoLetra => FromAppSetting<string>("FuenteProductoLetra");
+        public int ProductoAncho => FromAppSetting<int>("ProductoAncho");
+        public int ProductoAlto => FromAppSetting<int>("ProductoAlto");
+        public int MargenMesaAncho => FromAppSetting<int>("MargenMesaAncho");
+        public int MargenMesaAlto => FromAppSetting<int>("MargenMesaAlto");
+        public int MargenProductoAncho => FromAppSetting<int>("MargenProductoAncho");
+        public int MargenProductoAlto => FromAppSetting<int>("MargenProductoAlto");
+
 
         private Color FromAppSetting(string key)
         {
@@ -41,7 +51,15 @@ namespace ChoppInCaja
 
         private T FromAppSetting<T>(string key)
         {
-            return (T)Enum.Parse(typeof(T), ConfigurationManager.AppSettings[key], true);
+            if (typeof(T).IsEnum)
+            {
+                return (T)Enum.Parse(typeof(T), ConfigurationManager.AppSettings[key], true);
+            }
+            if (typeof(T) == typeof(Brush))
+            {
+                return (T)(object)new SolidBrush(FromAppSetting(key));
+            }
+            return (T)Convert.ChangeType(ConfigurationManager.AppSettings[key], typeof(T));
         }
     }
 }
