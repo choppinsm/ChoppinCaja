@@ -119,6 +119,13 @@
     <Compile Include="FormPago.Designer.cs">
       <DependentUpon>FormPago.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormProducto.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormProducto.Designer.cs">
+      <DependentUpon>FormProducto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Manager.cs" />
     <Compile Include="Marca.cs">
       <DependentUpon>ChoppinModel.tt</DependentUpon>
     </Compile>
@@ -168,6 +175,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormPago.resx">
       <DependentUpon>FormPago.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormProducto.resx">
+      <DependentUpon>FormProducto.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSplash.resx">
       <DependentUpon>FormSplash.cs</DependentUpon>

@@ -9,6 +9,7 @@ namespace ChoppInCaja
 {
     public class Estilo
     {
+        private Estilo() { }
         private static Estilo instance = null;
         public static Estilo Instance
         {
@@ -25,7 +26,6 @@ namespace ChoppInCaja
         public Color ColorVentas => FromAppSetting("ColorVentas");
         public Color ColorMesaAbierta => FromAppSetting("ColorMesaAbierta");
         public Color ColorMesaCerrada => FromAppSetting("ColorMesaCerrada");
-        public Color ColorMesaActiva => FromAppSetting("ColorMesaActiva");
         public Color ColorCerrarCaja => FromAppSetting("ColorCerrarCaja");
         public Color ColorAbrirCerrarMesa => FromAppSetting("AbrirCerrarMesa");
         public Color ColorABM => FromAppSetting("ColorABM");

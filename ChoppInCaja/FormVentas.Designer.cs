@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gridMesaDetalle = new System.Windows.Forms.DataGridView();
             this.StatusBar = new System.Windows.Forms.StatusStrip();
             this.LblEstado = new System.Windows.Forms.ToolStripStatusLabel();
@@ -55,16 +55,19 @@
             this.gridMesaDetalle.GridColor = System.Drawing.Color.Black;
             this.gridMesaDetalle.Location = new System.Drawing.Point(14, 504);
             this.gridMesaDetalle.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.gridMesaDetalle.MultiSelect = false;
             this.gridMesaDetalle.Name = "gridMesaDetalle";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Wingdings", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridMesaDetalle.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Wingdings", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridMesaDetalle.RowHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.gridMesaDetalle.RowHeadersWidth = 70;
             this.gridMesaDetalle.RowTemplate.Height = 40;
+            this.gridMesaDetalle.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridMesaDetalle.Size = new System.Drawing.Size(1318, 173);
             this.gridMesaDetalle.TabIndex = 2;
-            this.gridMesaDetalle.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridMesaDetalle_CellEndEdit);
+            this.gridMesaDetalle.TabStop = false;
+            this.gridMesaDetalle.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridMesaDetalle_CellClick);
             this.gridMesaDetalle.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.gridMesaDetalle_DataError);
             this.gridMesaDetalle.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.gridMesaDetalle_EditingControlShowing);
             // 
@@ -106,8 +109,10 @@
             this.BtnAbrirCerrarMesa.Name = "BtnAbrirCerrarMesa";
             this.BtnAbrirCerrarMesa.Size = new System.Drawing.Size(165, 38);
             this.BtnAbrirCerrarMesa.TabIndex = 5;
+            this.BtnAbrirCerrarMesa.TabStop = false;
             this.BtnAbrirCerrarMesa.Text = "Cerrar Mesa";
             this.BtnAbrirCerrarMesa.UseVisualStyleBackColor = true;
+            this.BtnAbrirCerrarMesa.Visible = false;
             this.BtnAbrirCerrarMesa.Click += new System.EventHandler(this.btnAbrirCerrarMesa_Click);
             // 
             // BtnABM
@@ -122,6 +127,7 @@
             this.BtnABM.Name = "BtnABM";
             this.BtnABM.Size = new System.Drawing.Size(29, 39);
             this.BtnABM.TabIndex = 8;
+            this.BtnABM.TabStop = false;
             this.BtnABM.Text = "!";
             this.BtnABM.UseVisualStyleBackColor = false;
             this.BtnABM.Click += new System.EventHandler(this.BtnABM_Click);
@@ -135,6 +141,7 @@
             this.BtnCerrarCaja.Name = "BtnCerrarCaja";
             this.BtnCerrarCaja.Size = new System.Drawing.Size(165, 38);
             this.BtnCerrarCaja.TabIndex = 9;
+            this.BtnCerrarCaja.TabStop = false;
             this.BtnCerrarCaja.Text = "Cerrar Caja";
             this.BtnCerrarCaja.UseVisualStyleBackColor = true;
             this.BtnCerrarCaja.Click += new System.EventHandler(this.BtnCerrarCaja_Click);
@@ -146,7 +153,6 @@
             this.TxtBusqueda.Name = "TxtBusqueda";
             this.TxtBusqueda.Size = new System.Drawing.Size(142, 26);
             this.TxtBusqueda.TabIndex = 11;
-            this.TxtBusqueda.Text = "T";
             this.TxtBusqueda.TextChanged += new System.EventHandler(this.TxtBusqueda_TextChanged);
             this.TxtBusqueda.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtBusqueda_KeyPress);
             // 

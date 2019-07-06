@@ -12,5 +12,6 @@ namespace ChoppInCaja.Model
         public string Nombre { get; set; }
         public int IdVenta => MesaVenta?.IdVenta ?? 0;
         public Venta MesaVenta;
+        public bool EstaSeleccionada { get; set; }
     }
 }

@@ -10,6 +10,7 @@ namespace ChoppInCaja.Model
     {
         Gonza = 1,
         Omar = 2,
-        Sebas = 3
+        Sebas = 3,
+        Yoyi = 4
     }
 }
