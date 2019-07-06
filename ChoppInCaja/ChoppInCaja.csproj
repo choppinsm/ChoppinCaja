@@ -151,6 +151,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectablePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Venta.cs">
       <DependentUpon>ChoppinModel.tt</DependentUpon>
     </Compile>

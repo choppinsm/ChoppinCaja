@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gridMesaDetalle = new System.Windows.Forms.DataGridView();
             this.StatusBar = new System.Windows.Forms.StatusStrip();
             this.LblEstado = new System.Windows.Forms.ToolStripStatusLabel();
@@ -37,7 +37,6 @@
             this.BtnABM = new System.Windows.Forms.Button();
             this.BtnCerrarCaja = new System.Windows.Forms.Button();
             this.TxtBusqueda = new System.Windows.Forms.TextBox();
-            this.LstProductos = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.gridMesaDetalle)).BeginInit();
             this.StatusBar.SuspendLayout();
             this.SuspendLayout();
@@ -57,10 +56,10 @@
             this.gridMesaDetalle.Location = new System.Drawing.Point(14, 504);
             this.gridMesaDetalle.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.gridMesaDetalle.Name = "gridMesaDetalle";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Wingdings", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridMesaDetalle.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Wingdings", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridMesaDetalle.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.gridMesaDetalle.RowHeadersWidth = 70;
             this.gridMesaDetalle.RowTemplate.Height = 40;
             this.gridMesaDetalle.Size = new System.Drawing.Size(1318, 173);
@@ -151,26 +150,12 @@
             this.TxtBusqueda.TextChanged += new System.EventHandler(this.TxtBusqueda_TextChanged);
             this.TxtBusqueda.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtBusqueda_KeyPress);
             // 
-            // LstProductos
-            // 
-            this.LstProductos.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.LstProductos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.LstProductos.Location = new System.Drawing.Point(14, 354);
-            this.LstProductos.Name = "LstProductos";
-            this.LstProductos.Size = new System.Drawing.Size(1318, 134);
-            this.LstProductos.TabIndex = 12;
-            this.LstProductos.TabStop = true;
-            this.LstProductos.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.LstProductos_PreviewKeyDown);
-            // 
             // FormVentas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightYellow;
             this.ClientSize = new System.Drawing.Size(1344, 712);
-            this.Controls.Add(this.LstProductos);
             this.Controls.Add(this.TxtBusqueda);
             this.Controls.Add(this.BtnCerrarCaja);
             this.Controls.Add(this.BtnABM);
@@ -181,6 +166,7 @@
             this.Name = "FormVentas";
             this.Text = "Ventas";
             this.Load += new System.EventHandler(this.Ventas_Load);
+            this.SizeChanged += new System.EventHandler(this.FormVentas_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.gridMesaDetalle)).EndInit();
             this.StatusBar.ResumeLayout(false);
             this.StatusBar.PerformLayout();
@@ -198,7 +184,6 @@
         private System.Windows.Forms.Button BtnCerrarCaja;
         private System.Windows.Forms.ToolStripStatusLabel LblTotal;
         private System.Windows.Forms.TextBox TxtBusqueda;
-        private System.Windows.Forms.Panel LstProductos;
     }
 }
 

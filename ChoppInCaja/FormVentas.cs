@@ -17,9 +17,12 @@ namespace ChoppInCaja
             refrescarMesas();
             refrescarProductos();
 			InitializeComponent();
+            Controls.Add(LstProductos);
+            LstProductos.PreviewKeyDown += LstProductos_PreviewKeyDown;
 
             this.BackColor = Estilo.Instance.ColorVentas;
 
+            gridMesaDetalle.Visible = false;
             gridMesaDetalle.AutoGenerateColumns = false;
 			gridMesaDetalle.EnableHeadersVisualStyles = false;
 			var columns = gridMesaDetalle.Columns;
@@ -110,7 +113,7 @@ namespace ChoppInCaja
 
         private void SetLocation(Control control, ref Point location, Size margen)
         {
-            if (location.X + margen.Width + control.Size.Width > Width)
+            if (location.X + margen.Width + control.Size.Width > control.Parent.Width)
             {
                 location.X = margen.Width;
                 location.Y += margen.Height + control.Height;
@@ -148,6 +151,8 @@ namespace ChoppInCaja
             location.X = margen.Width;
             SetLocation(LstProductos, ref location, margen);
             LstProductos.Height = gridMesaDetalle.Top - margen.Height - LstProductos.Top;
+            LstProductos.Width = gridMesaDetalle.Width;
+            LstProductos.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
             BtnAbrirCerrarMesa.BackColor = Estilo.Instance.ColorAbrirCerrarMesa;
             BtnCerrarCaja.BackColor = Estilo.Instance.ColorCerrarCaja;
             BtnABM.BackColor = Estilo.Instance.ColorABM;
@@ -186,14 +191,10 @@ namespace ChoppInCaja
         private void ImgProducto_Paint(object sender, PaintEventArgs e)
         {
             var imgProducto = (PictureBox)sender;
+            var producto = (ProductoVM)imgProducto.Tag;
             if (imgProducto.Image == null && (imgProducto.ImageLocation?.Length ?? 0) == 0)
             {
-                var producto = (ProductoVM)imgProducto.Tag;
                 e.Graphics.Clear(Estilo.Instance.ColorProductoFondo);
-                if (producto.EstaSeleccionado)
-                {
-                    e.Graphics.DrawRectangle(new Pen(Estilo.Instance.ColorProductoBorde, 5), new Rectangle(Estilo.Instance.ProductoBordeAncho / 2, Estilo.Instance.ProductoBordeAncho / 2, imgProducto.Size.Width - Estilo.Instance.ProductoBordeAncho, imgProducto.Size.Height - Estilo.Instance.ProductoBordeAncho));
-                }
                 using (Font myFont = new Font(Estilo.Instance.FuenteProductoLetra, Estilo.Instance.TamañoProductoLetra))
                 {
                     e.Graphics.DrawString($"{producto.Categoria}", myFont, Estilo.Instance.ColorProductoLetra, new Point(5, 5));
@@ -206,8 +207,12 @@ namespace ChoppInCaja
                             : "";
                     e.Graphics.DrawString($"{nombre1}", myFont, Estilo.Instance.ColorProductoLetra, new Point(5, myFont.Height * 2 + 15));
                     e.Graphics.DrawString($"{nombre2}", myFont, Estilo.Instance.ColorProductoLetra, new Point(5, myFont.Height * 3 + 20));
-                    imgProducto.BorderStyle = BorderStyle.FixedSingle;
+                    //imgProducto.BorderStyle = BorderStyle.FixedSingle;
                 }
+            }
+            if (producto.EstaSeleccionado)
+            {
+                e.Graphics.DrawRectangle(new Pen(Estilo.Instance.ColorProductoBorde, 5), new Rectangle(Estilo.Instance.ProductoBordeAncho / 2, Estilo.Instance.ProductoBordeAncho / 2, imgProducto.Size.Width - Estilo.Instance.ProductoBordeAncho, imgProducto.Size.Height - Estilo.Instance.ProductoBordeAncho));
             }
         }
 
@@ -216,7 +221,6 @@ namespace ChoppInCaja
             var margen = new Size(Estilo.Instance.MargenProductoAncho, Estilo.Instance.MargenProductoAlto);
             var location = new Point(margen);// Posicion del producto
             var filtro = TxtBusqueda.Text;
-            var algunoSeleccionado = false;
             foreach (Control imgProducto in LstProductos.Controls)
             {
                 var producto = (ProductoVM)imgProducto.Tag;
@@ -237,9 +241,25 @@ namespace ChoppInCaja
                 imgProducto.Visible = producto.Visible = producto.filtraCategoria && producto.filtraMarca && producto.filtraNombre;
                 if (imgProducto.Visible)
                 {
-                    producto.EstaSeleccionado = !algunoSeleccionado;
-                    algunoSeleccionado = true;
                     SetLocation(imgProducto, ref location, margen);
+                }
+            }
+
+            var productos = LstProductos.Controls.Cast<Control>()
+                .Select(c => (ProductoVM)c.Tag)
+                .ToList();
+            var idxSeleccionado = productos.FindIndex(p => p.EstaSeleccionado);
+            if (!productos[idxSeleccionado].Visible)
+            {
+                productos[idxSeleccionado].EstaSeleccionado = false;
+
+                var productosVisible = LstProductos.Controls.Cast<Control>()
+                    .Select(c => (ProductoVM)c.Tag)
+                    .Where(p => p.Visible)
+                    .FirstOrDefault();
+                if (productosVisible != null)
+                {
+                    productosVisible.EstaSeleccionado = true;
                 }
             }
             LstProductos.Refresh();
@@ -601,7 +621,7 @@ namespace ChoppInCaja
 
         private void LstProductos_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            if (new[] { Keys.Up, Keys.Down, Keys.Left, Keys.Right }.Contains(e.KeyCode))
+            if (new[] { Keys.Enter, Keys.Up, Keys.Down, Keys.Left, Keys.Right }.Contains(e.KeyCode))
             {
                 MoverSeleccion(e.KeyCode);
             }
@@ -609,7 +629,67 @@ namespace ChoppInCaja
 
         private void MoverSeleccion(Keys keyCode)
         {
-            throw new NotImplementedException();
+            if (LstProductos.Controls.Count <= 1)
+            {
+                return;
+            }
+            var productosVisibles = LstProductos.Controls.Cast<Control>()
+                .Select(c => (ProductoVM)c.Tag)
+                .Where(p => p.Visible)
+                .ToList();
+            var idxSeleccionado = productosVisibles.FindIndex(p => p.EstaSeleccionado);
+            var mover = 0;
+            switch (keyCode)
+            {
+                case Keys.Enter:
+                    AgregarProducto(productosVisibles[idxSeleccionado]);
+                    break;
+                case Keys.Left:
+                    if (idxSeleccionado > 0)
+                    {
+                        mover = - 1;
+                    }
+                    break;
+                case Keys.Right:
+                    if (productosVisibles.Count > idxSeleccionado + 1)
+                    {
+                        mover = 1;
+                    }
+                    break;
+                case Keys.Up:
+                    if (idxSeleccionado - GetProductosPorFila >= 0)
+                    {
+                        mover = GetProductosPorFila * -1;
+                    }
+                    break;
+                case Keys.Down:
+                    if (productosVisibles.Count > idxSeleccionado + GetProductosPorFila)
+                    {
+                        mover = GetProductosPorFila;
+                    }
+                    break;
+            }
+            if (mover != 0)
+            {
+                productosVisibles[idxSeleccionado].EstaSeleccionado = false;
+                productosVisibles[idxSeleccionado + mover].EstaSeleccionado = true;
+            }
+            LstProductos.Update();
+            LstProductos.Refresh();
+        }
+
+        private void AgregarProducto(ProductoVM productoVM)
+        {
+            
+        }
+
+        private SelectablePanel LstProductos = new SelectablePanel();
+
+        private int GetProductosPorFila => LstProductos.Width / (Estilo.Instance.ProductoAncho + Estilo.Instance.MargenProductoAncho);
+
+        private void FormVentas_SizeChanged(object sender, EventArgs e)
+        {
+            ActualizarProductos();
         }
     }
 }
