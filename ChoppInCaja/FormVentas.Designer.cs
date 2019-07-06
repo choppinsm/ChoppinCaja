@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gridMesaDetalle = new System.Windows.Forms.DataGridView();
             this.StatusBar = new System.Windows.Forms.StatusStrip();
             this.LblEstado = new System.Windows.Forms.ToolStripStatusLabel();
@@ -57,19 +57,17 @@
             this.gridMesaDetalle.Location = new System.Drawing.Point(14, 504);
             this.gridMesaDetalle.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.gridMesaDetalle.Name = "gridMesaDetalle";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Wingdings", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridMesaDetalle.RowHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Wingdings", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridMesaDetalle.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.gridMesaDetalle.RowHeadersWidth = 70;
             this.gridMesaDetalle.RowTemplate.Height = 40;
             this.gridMesaDetalle.Size = new System.Drawing.Size(1318, 173);
             this.gridMesaDetalle.TabIndex = 2;
-            this.gridMesaDetalle.DataSourceChanged += new System.EventHandler(this.gridMesaDetalle_DataSourceChanged);
             this.gridMesaDetalle.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridMesaDetalle_CellEndEdit);
             this.gridMesaDetalle.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.gridMesaDetalle_DataError);
             this.gridMesaDetalle.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.gridMesaDetalle_EditingControlShowing);
-            this.gridMesaDetalle.NewRowNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.gridMesaDetalle_NewRowNeeded);
             // 
             // StatusBar
             // 
@@ -145,9 +143,13 @@
             // TxtBusqueda
             // 
             this.TxtBusqueda.Location = new System.Drawing.Point(14, 211);
+            this.TxtBusqueda.MaxLength = 3;
             this.TxtBusqueda.Name = "TxtBusqueda";
             this.TxtBusqueda.Size = new System.Drawing.Size(142, 26);
             this.TxtBusqueda.TabIndex = 11;
+            this.TxtBusqueda.Text = "T";
+            this.TxtBusqueda.TextChanged += new System.EventHandler(this.TxtBusqueda_TextChanged);
+            this.TxtBusqueda.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtBusqueda_KeyPress);
             // 
             // LstProductos
             // 
@@ -159,6 +161,8 @@
             this.LstProductos.Name = "LstProductos";
             this.LstProductos.Size = new System.Drawing.Size(1318, 134);
             this.LstProductos.TabIndex = 12;
+            this.LstProductos.TabStop = true;
+            this.LstProductos.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.LstProductos_PreviewKeyDown);
             // 
             // FormVentas
             // 

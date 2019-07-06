@@ -125,6 +125,7 @@
     <Compile Include="Mesa.cs">
       <DependentUpon>ChoppinModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\ProductoVM.cs" />
     <Compile Include="Pago.cs">
       <DependentUpon>ChoppinModel.tt</DependentUpon>
     </Compile>

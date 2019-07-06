@@ -12,10 +12,10 @@ namespace ChoppInCaja
 {
 	public partial class FormVentas : Form
 	{
-		public FormVentas(List<Mesa> mesas, List<Producto> productos)
+		public FormVentas()
 		{
             refrescarMesas();
-            this.productos = productos;
+            refrescarProductos();
 			InitializeComponent();
 
             this.BackColor = Estilo.Instance.ColorVentas;
@@ -45,7 +45,7 @@ namespace ChoppInCaja
 			cmb.DisplayMember = "Nombre";
 			cmb.DataPropertyName = "IdProducto";
 			cmb.MaxDropDownItems = 5;
-			cmb.DataSource = productos;
+			cmb.DataSource = productosVM;
             column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             columns.Add(cmb);
 
@@ -103,7 +103,7 @@ namespace ChoppInCaja
             columns.Add(column);
 		}
 
-		private void Ventas_Load(object sender, EventArgs e)
+        private void Ventas_Load(object sender, EventArgs e)
 		{
             AcomodarControles();
 		}
@@ -123,7 +123,7 @@ namespace ChoppInCaja
         {   
             var margen = new Size(Estilo.Instance.MargenMesaAncho, Estilo.Instance.MargenMesaAlto);
             var location = new Point(margen);// Posicion de la mesa
-            foreach (var mesa in mesas)
+            foreach (var mesa in mesasVM)
             {
                 var btn = new Button();
                 btn.Name = $"btnMesa{mesa.IdMesa}";
@@ -165,9 +165,10 @@ namespace ChoppInCaja
 
         private void CrearProductos()
         {
-            foreach (var producto in productos)
+            foreach (var producto in productosVM)
             {
                 var imgProducto = new PictureBox();
+                imgProducto.Tag = producto;
                 imgProducto.BackColor = Estilo.Instance.ColorProductoFondo;
                 var rutaImagen = $@"{Application.StartupPath}\Imagenes\Productos\{producto.IdProducto}.jpeg";
                 imgProducto.Paint += ImgProducto_Paint;
@@ -187,10 +188,25 @@ namespace ChoppInCaja
             var imgProducto = (PictureBox)sender;
             if (imgProducto.Image == null && (imgProducto.ImageLocation?.Length ?? 0) == 0)
             {
-                e.Graphics.Clear(Color.Black);
+                var producto = (ProductoVM)imgProducto.Tag;
+                e.Graphics.Clear(Estilo.Instance.ColorProductoFondo);
+                if (producto.EstaSeleccionado)
+                {
+                    e.Graphics.DrawRectangle(new Pen(Estilo.Instance.ColorProductoBorde, 5), new Rectangle(Estilo.Instance.ProductoBordeAncho / 2, Estilo.Instance.ProductoBordeAncho / 2, imgProducto.Size.Width - Estilo.Instance.ProductoBordeAncho, imgProducto.Size.Height - Estilo.Instance.ProductoBordeAncho));
+                }
                 using (Font myFont = new Font(Estilo.Instance.FuenteProductoLetra, Estilo.Instance.TamañoProductoLetra))
                 {
-                    e.Graphics.DrawString($"producto.Nombre", myFont, Estilo.Instance.ColorProductoLetra, new Point(10, 10));
+                    e.Graphics.DrawString($"{producto.Categoria}", myFont, Estilo.Instance.ColorProductoLetra, new Point(5, 5));
+                    e.Graphics.DrawString($"{producto.Marca}", myFont, Estilo.Instance.ColorProductoLetra, new Point(5, myFont.Height + 10));
+                    var nombre1 = producto.Nombre.Trim();
+                    var nomMax = Estilo.Instance.ProductoLargoNombreMaximo;
+                    nombre1 = nombre1.Substring(0, nombre1.Length > nomMax ? nomMax : nombre1.Length);
+                    var nombre2 = producto.Nombre.Length > nomMax
+                            ? producto.Nombre.Substring(nomMax).Trim()
+                            : "";
+                    e.Graphics.DrawString($"{nombre1}", myFont, Estilo.Instance.ColorProductoLetra, new Point(5, myFont.Height * 2 + 15));
+                    e.Graphics.DrawString($"{nombre2}", myFont, Estilo.Instance.ColorProductoLetra, new Point(5, myFont.Height * 3 + 20));
+                    imgProducto.BorderStyle = BorderStyle.FixedSingle;
                 }
             }
         }
@@ -199,15 +215,40 @@ namespace ChoppInCaja
         {
             var margen = new Size(Estilo.Instance.MargenProductoAncho, Estilo.Instance.MargenProductoAlto);
             var location = new Point(margen);// Posicion del producto
+            var filtro = TxtBusqueda.Text;
+            var algunoSeleccionado = false;
             foreach (Control imgProducto in LstProductos.Controls)
             {
-                SetLocation(imgProducto, ref location, margen);
+                var producto = (ProductoVM)imgProducto.Tag;
+                
+                producto.filtraCategoria = producto.filtraMarca = producto.filtraNombre = filtro.Length == 0;
+
+                if (filtro.Length > 0)
+                {
+                    producto.filtraCategoria = filtro[0] == producto.Categoria.ToUpper()[0];
+
+                    producto.filtraMarca = producto.Marca.Length == 0 || filtro.Length < 2 || filtro[1] == producto.Marca.ToUpper()[0];
+
+                    producto.filtraNombre = producto.Nombre.Length == 0 ||
+                        filtro.Length == 1 ||
+                        (filtro.Length == 2 && (producto.Marca.Length > 0 || filtro[1] == producto.Nombre.ToUpper()[0])) ||
+                        (filtro.Length == 3 && filtro[2] == producto.Nombre.ToUpper()[0]);
+                }
+                imgProducto.Visible = producto.Visible = producto.filtraCategoria && producto.filtraMarca && producto.filtraNombre;
+                if (imgProducto.Visible)
+                {
+                    producto.EstaSeleccionado = !algunoSeleccionado;
+                    algunoSeleccionado = true;
+                    SetLocation(imgProducto, ref location, margen);
+                }
             }
+            LstProductos.Refresh();
+            LstProductos.Update();
         }
 
         private void ActualizarMesas()
         {
-            foreach (var mesa in mesas)
+            foreach (var mesa in mesasVM)
             {
                 var btnMesa = (Button)Controls.Cast<Control>()
                     .Single(c => c.Name.StartsWith("btnMesa") && (int)c.Tag == mesa.IdMesa);
@@ -229,8 +270,8 @@ namespace ChoppInCaja
         }
 
         private int ultimaIdMesaSeleccionada = -1;
-		private List<MesaVM> mesas;
-		private List<Producto> productos;
+		private List<MesaVM> mesasVM;
+		private List<ProductoVM> productosVM;
 
         private void RefrescarVenta(int idVenta, bool agregarItem)
 		{
@@ -337,6 +378,7 @@ namespace ChoppInCaja
         }
 
         FormPago formPago = new FormPago();
+
         private void CerrarVenta()
         {
             var items = ((List<VentaDetalleVM>)gridMesaDetalle.DataSource);
@@ -436,7 +478,7 @@ namespace ChoppInCaja
 			var idxProducto = ((DataGridViewComboBoxEditingControl)sender).SelectedIndex;
 			if (idxProducto < 0)
 				return;
-			var producto = productos[idxProducto];
+			var producto = productosVM[idxProducto];
 			var idxItem = gridMesaDetalle.SelectedCells[0].RowIndex;
             var item = ((VentaDetalleVM)gridMesaDetalle.Rows[idxItem].DataBoundItem);
             item.Precio = producto.Precio;
@@ -491,14 +533,14 @@ namespace ChoppInCaja
             Program.ActualizarTablas();
             refrescarMesas();
             AcomodarControles();
-            this.productos = Program.Productos;
+            refrescarProductos();
         }
 
         private void refrescarMesas()
         {
             using (var context = new ChoppinEntities())
             {
-                mesas = (from m in context.Mesas
+                mesasVM = (from m in context.Mesas
                         join v in context.Ventas.Where(v => v.Cierre == null)
                         on m.IdMesa equals v.IdMesa into mv
                         from mesaVenta in mv.DefaultIfEmpty()
@@ -512,19 +554,23 @@ namespace ChoppInCaja
             }
         }
 
+        private void refrescarProductos()
+        {
+            productosVM = (from p in Program.Productos
+                                select new ProductoVM
+                                {
+                                    IdProducto = p.IdProducto,
+                                    Nombre = p.Nombre,
+                                    Categoria = p.Categoria.Nombre,
+                                    Marca = p.Marca.Nombre,
+                                    Precio = p.Precio
+                                }
+                                ).ToList();
+        }
+
         private void BtnCerrarCaja_Click(object sender, EventArgs e)
         {
             new FormCaja().Show();
-        }
-
-        private void gridMesaDetalle_DataSourceChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void gridMesaDetalle_NewRowNeeded(object sender, DataGridViewRowEventArgs e)
-        {
-
         }
 
         private void gridMesaDetalle_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -540,6 +586,30 @@ namespace ChoppInCaja
                 RefrescarVenta(ventaVM.IdVenta, true);
             }
             catch { }
+        }
+
+        private void TxtBusqueda_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.KeyChar = e.KeyChar.ToString().ToUpper()[0];
+        }
+
+        private void TxtBusqueda_TextChanged(object sender, EventArgs e)
+        {
+
+            ActualizarProductos();
+        }
+
+        private void LstProductos_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (new[] { Keys.Up, Keys.Down, Keys.Left, Keys.Right }.Contains(e.KeyCode))
+            {
+                MoverSeleccion(e.KeyCode);
+            }
+        }
+
+        private void MoverSeleccion(Keys keyCode)
+        {
+            throw new NotImplementedException();
         }
     }
 }

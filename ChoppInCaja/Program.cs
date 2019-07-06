@@ -36,7 +36,7 @@ namespace ChoppInCaja
 				Application.Run(formABM);
 			}
 			else{
-				var formVentas = new FormVentas(Mesas, Productos);
+				var formVentas = new FormVentas();
 				Application.Run(formVentas);
 			}
 		}
@@ -48,7 +48,7 @@ namespace ChoppInCaja
                 Mesas = (from mesa in context.Mesas
                          select mesa
                         ).ToList();
-                Productos = (from producto in context.Productos
+                Productos = (from producto in context.Productos.Include("Categoria").Include("Marca")
                              select producto
                         ).ToList();
                 Tablas = context.Database

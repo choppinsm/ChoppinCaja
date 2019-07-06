@@ -33,6 +33,7 @@ namespace ChoppInCaja
         public Color ColorEstado => FromAppSetting("ColorEstado");
         public Color ColorBarraEstado => FromAppSetting("ColorBarraEstado");
         public Color ColorProductoFondo => FromAppSetting("ColorProductoFondo");
+        public Color ColorProductoBorde => FromAppSetting("ColorProductoBorde");
         public Brush ColorProductoLetra => FromAppSetting<Brush>("ColorProductoLetra");
         public int TamañoProductoLetra => FromAppSetting<int>("TamañoProductoLetra");
         public string FuenteProductoLetra => FromAppSetting<string>("FuenteProductoLetra");
@@ -42,7 +43,8 @@ namespace ChoppInCaja
         public int MargenMesaAlto => FromAppSetting<int>("MargenMesaAlto");
         public int MargenProductoAncho => FromAppSetting<int>("MargenProductoAncho");
         public int MargenProductoAlto => FromAppSetting<int>("MargenProductoAlto");
-
+        public int ProductoLargoNombreMaximo => FromAppSetting<int>("ProductoLargoNombreMaximo");
+        public int ProductoBordeAncho => FromAppSetting<int>("ProductoBordeAncho");
 
         private Color FromAppSetting(string key)
         {

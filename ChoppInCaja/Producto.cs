@@ -28,7 +28,7 @@ namespace ChoppInCaja
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<VentaDetalle> VentasDetalles { get; set; }
-        public virtual Categoria Categorias { get; set; }
+        public virtual Categoria Categoria { get; set; }
         public virtual Marca Marca { get; set; }
     }
 }

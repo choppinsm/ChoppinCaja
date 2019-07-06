@@ -16,8 +16,8 @@
         <EntityTypeShape EntityType="ChoppinModel.CajaCerrada" Width="1.5" PointX="0.75" PointY="3.75" />
         <EntityTypeShape EntityType="ChoppinModel.Categoria" Width="1.5" PointX="13.375" PointY="4.125" />
         <AssociationConnector Association="ChoppinModel.CategoriasProducto" />
-        <EntityTypeShape EntityType="ChoppinModel.Marca" Width="1.5" PointX="13.5" PointY="2.125" />
-        <AssociationConnector Association="ChoppinModel.MarcaProducto" />
+        <EntityTypeShape EntityType="ChoppinModel.Marca" Width="1.5" PointX="13.5" PointY="1.875" />
+        <AssociationConnector Association="ChoppinModel.FK_Marcas_Categorias" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
